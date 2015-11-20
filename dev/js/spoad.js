@@ -1,7 +1,5 @@
 
-var namespace = {};
-
-function Desp(ns) {
+function Spoad(ns) {
   ns.scripts = {};
 
   // namespace.loadedState.tooltip.{
@@ -81,4 +79,4 @@ function Desp(ns) {
   }
 }
 
-var Yo = new Desp(namespace);
+var Yo = new Spoad(namespace);

@@ -16,6 +16,32 @@ The main gulp command is to simply run
 $ gulp
 ```
 
-This imports javascript into 1 file and copies it to a public folder along with the index html page.  You're now ready to get on to working with this.  Let's do it :-P
+This imports javascript into 1 file and copies it to a public folder along with the index html page.
 
-eyeamaman
+
+### To Use
+
+#### For new scripts
+
+```javascript
+  Yo.add('Lister', [], function() {
+  });
+```
+
+#### and add the following line to main.js
+
+```javascript
+  //= require widgets/test.js
+```
+
+
+#### with dependencies
+
+```javascript
+  Yo.add('Lister', ['something', 'else'], function(something, else) {
+    something.show();
+    else.show();
+  });
+```
+
+eyeamaman@gmail.com

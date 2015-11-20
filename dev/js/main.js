@@ -1,7 +1,6 @@
 
-//= require objects.js
-//= require deferred.js
-//= require desp.js
+//= require start.js
+//= require spoad.js
 
 // TEST EMPTY WIDGETS
 //= require widgets/test.js
