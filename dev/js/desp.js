@@ -1,28 +1,65 @@
 
-var eyeamaman = {};
+var namespace = {};
 
 function Desp() {
-  eyeamaman.scripts = {};
+  namespace.scripts = {};
+
+  // namespace.loadedState.tooltip.{
+  //    loaded: boolean
+  //    loadedFunc: function
+  //    arrayList: [function, function, function]
+  // }
+  namespace.loadedState = {};
 
   var add = function() {
-    var str = arguments[0];
+    var str = arguments[0].toLowerCase();
     var dependencies = arguments[1];
     var func = arguments[2];
+    var noDependencies = dependencies.length < 1;
 
-    var waiting = function() {
-      var def = new Deferred();
+    var addToScripts = function() {
+      // Set namespace scripts to returned function
+      namespace.scripts[str] = func();
 
-      def.resolve(this);
+      // Check if loadState exists already
+      // then set the basics or run the arrayList
+      // function and set the loaded to true
+      if(!namespace.loadedState[str]) {
+        namespace.loadedState[str] = {
+          loaded: true,
+          loadedFunc: function() {
+          },
+          arrayList: []
+        }
+      }
+      else {
+        // set loaded to true
+        namespace.loadedState[str].loaded = true;
+
+        // Run all functions stored by dependencies
+        namespace.loadedState[str].arrayList.forEach(function(func) {
+          func();
+        });
+      }
     };
 
     // add to scripts object
-    if (dependencies.length < 1) {
-      eyeamaman.scripts[str.toLowerCase()] = func();
-      //console.log(Object.size(eyeamaman.scripts));
+    if (noDependencies) {
+      addToScripts();
     }
     else {
-      // set a ready function for if the dependencies have loaded
-      waiting().resolve(function() {
+      // add an array of functions ready to fire
+      // when the dependency loads
+      dependencies.forEach(function(entry) {
+        if(!namespace.loadedState[entry]) {
+          namespace.loadedState[entry] = {
+            loaded: false,
+            loadedFunc: function() {
+            },
+            arrayList: []
+          };
+        }
+        namespace.loadedState[entry].arrayList.push(addToScripts);
       });
     }
   };
