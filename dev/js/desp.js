@@ -7,7 +7,8 @@ function Desp(ns) {
   // namespace.loadedState.tooltip.{
   //    loaded: boolean
   //    loadedFunc: function
-  //    arrayList: [function, function, function]
+  //    arrayList: [function, function, function],
+  //    dependencies: [object, object, object]
   // }
   ns.loadedState = {};
 
@@ -19,7 +20,10 @@ function Desp(ns) {
 
     var addToScripts = function() {
       // Set namespace scripts to returned function
-      ns.scripts[str] = func();
+
+      if (noDependencies) {
+        ns.scripts[str] = func();
+      }
 
       // Check if loadState exists already
       // then set the basics or run the arrayList
@@ -35,8 +39,8 @@ function Desp(ns) {
         ns.loadedState[str].loaded = true;
 
         // Run all functions stored by dependencies
-        ns.loadedState[str].arrayList.forEach(function(func) {
-          func();
+        ns.loadedState[str].arrayList.forEach(function(initFunct) {
+          initFunct();
         });
         // reset all functions
         ns.loadedState[str].arrayList = [];
@@ -51,6 +55,8 @@ function Desp(ns) {
       // add an array of functions ready to fire
       // when the dependency loads
       dependencies.forEach(function(entry) {
+        // Generate loadState for all dependencies
+        // if not already.
         if(!ns.loadedState[entry]) {
           ns.loadedState[entry] = {
             loaded: false,
@@ -58,7 +64,15 @@ function Desp(ns) {
           };
         }
       });
-      ns.loadedState[dependencies[dependencies.length-1]].arrayList.push(addToScripts);
+
+      // add the main activation script to
+      // the last dependency array.
+      ns.loadedState[dependencies[dependencies.length-1]].arrayList.push(function() {
+        ns.scripts[str] = func.apply(null, dependencies.map(function(str) {
+          return ns.scripts[str];
+        }));
+        addToScripts();
+      });
     }
   };
 
