@@ -1,15 +1,15 @@
 
 var namespace = {};
 
-function Desp() {
-  namespace.scripts = {};
+function Desp(ns) {
+  ns.scripts = {};
 
   // namespace.loadedState.tooltip.{
   //    loaded: boolean
   //    loadedFunc: function
   //    arrayList: [function, function, function]
   // }
-  namespace.loadedState = {};
+  ns.loadedState = {};
 
   var add = function() {
     var str = arguments[0].toLowerCase();
@@ -19,27 +19,27 @@ function Desp() {
 
     var addToScripts = function() {
       // Set namespace scripts to returned function
-      namespace.scripts[str] = func();
+      ns.scripts[str] = func();
 
       // Check if loadState exists already
       // then set the basics or run the arrayList
       // function and set the loaded to true
-      if(!namespace.loadedState[str]) {
-        namespace.loadedState[str] = {
+      if(!ns.loadedState[str]) {
+        ns.loadedState[str] = {
           loaded: true,
-          loadedFunc: function() {
-          },
           arrayList: []
         }
       }
       else {
         // set loaded to true
-        namespace.loadedState[str].loaded = true;
+        ns.loadedState[str].loaded = true;
 
         // Run all functions stored by dependencies
-        namespace.loadedState[str].arrayList.forEach(function(func) {
+        ns.loadedState[str].arrayList.forEach(function(func) {
           func();
         });
+        // reset all functions
+        ns.loadedState[str].arrayList = [];
       }
     };
 
@@ -51,16 +51,14 @@ function Desp() {
       // add an array of functions ready to fire
       // when the dependency loads
       dependencies.forEach(function(entry) {
-        if(!namespace.loadedState[entry]) {
-          namespace.loadedState[entry] = {
+        if(!ns.loadedState[entry]) {
+          ns.loadedState[entry] = {
             loaded: false,
-            loadedFunc: function() {
-            },
             arrayList: []
           };
         }
-        namespace.loadedState[entry].arrayList.push(addToScripts);
       });
+      ns.loadedState[dependencies[dependencies.length-1]].arrayList.push(addToScripts);
     }
   };
 
@@ -69,4 +67,4 @@ function Desp() {
   }
 }
 
-var Yo = new Desp();
+var Yo = new Desp(namespace);

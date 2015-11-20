@@ -29,7 +29,7 @@ Deferred.prototype = {
   }
 };
 
-
+/*
 var v;
 
 var setVal = function() {
@@ -44,3 +44,4 @@ var setVal = function() {
 setVal().done(function() {
   console.log('all done :' + v);
 });
+*/
