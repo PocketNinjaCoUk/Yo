@@ -1,0 +1,25 @@
+{
+  "name": "js-dependency-single-page",
+  "version": "1.0.0",
+  "description": "Script for working with dependencies within the same file",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eyeamaman/js-dependency-single-page.git"
+  },
+  "keywords": [
+    "gulp",
+    "single",
+    "page",
+    "dependencies"
+  ],
+  "author": "eyeamaman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eyeamaman/js-dependency-single-page/issues"
+  },
+  "homepage": "https://github.com/eyeamaman/js-dependency-single-page"
+}
