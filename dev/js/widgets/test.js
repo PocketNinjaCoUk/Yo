@@ -1,6 +1,12 @@
-Yo.add('Test', ['egg', 'tooltip', 'dropdown'], function(egg, tooltip, dropdown) {
+Yo.add('Test', ['egg'], function(egg) {
   console.log('test active');
-  console.log(egg.output());
-  console.log(tooltip.output());
-  console.log(dropdown.output());
+  egg.output()
+
+  var output = function() {
+    console.log('output from test');
+  };
+
+  return {
+    output: output
+  }
 });
