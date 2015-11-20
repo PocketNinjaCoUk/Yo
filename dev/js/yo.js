@@ -1,5 +1,5 @@
 
-function Spoad(ns) {
+var Yo = function(ns) {
   ns.scripts = {};
 
   // namespace.loadedState.tooltip.{
@@ -77,6 +77,4 @@ function Spoad(ns) {
   return {
     add: add
   }
-}
-
-var Yo = new Spoad(namespace);
+}(namespace);

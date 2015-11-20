@@ -1,6 +1,6 @@
 
 //= require start.js
-//= require spoad.js
+//= require yo.js
 
 // TEST EMPTY WIDGETS
 //= require widgets/test.js
