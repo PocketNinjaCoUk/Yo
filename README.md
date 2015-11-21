@@ -42,9 +42,9 @@ This imports javascript into 1 file and copies it to a public folder along with 
 #### with dependencies
 
 ```javascript
-  Yo.add('Lister', ['something', 'else'], function(something, else) {
+  Yo.add('Lister', ['something', 'different'], function(something, different) {
     something.show();
-    else.show();
+    different.show();
   });
 ```
 
