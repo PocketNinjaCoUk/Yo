@@ -1,12 +1,23 @@
-Yo.add('Test', ['egg'], function(egg) {
-  console.log('test active');
-  egg.output()
+Yo.add('Test', [], function() {
 
-  var output = function() {
-    console.log('output from test');
-  };
+  console.log('test active');
+
+  var
+    number = 10,
+
+    output = function() {
+      console.log('output from test');
+    },
+    setNumber = function(num) {
+      number = num;
+    },
+    getNumber = function() {
+      return number;
+    };
 
   return {
-    output: output
+    output: output,
+    setNumber: setNumber,
+    getNumber: getNumber
   }
 });

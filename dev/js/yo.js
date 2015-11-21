@@ -14,7 +14,16 @@ var Yo = function(ns) {
     var str = arguments[0].toLowerCase();
     var dependencies = arguments[1];
     var func = arguments[2];
+
     var noDependencies = dependencies.length < 1;
+    var allLoaded = true;
+
+    var pushFunction = function() {
+      ns.scripts[str] = func.apply(null, dependencies.map(function(str) {
+        return ns.scripts[str];
+      }));
+      addToScripts();
+    };
 
     var addToScripts = function() {
       // Set namespace scripts to returned function
@@ -52,6 +61,7 @@ var Yo = function(ns) {
     else {
       // add an array of functions ready to fire
       // when the dependency loads
+
       dependencies.forEach(function(entry) {
         // Generate loadState for all dependencies
         // if not already.
@@ -60,17 +70,18 @@ var Yo = function(ns) {
             loaded: false,
             arrayList: []
           };
+          allLoaded = false;
         }
       });
 
-      // add the main activation script to
-      // the last dependency array.
-      ns.loadedState[dependencies[dependencies.length-1]].arrayList.push(function() {
-        ns.scripts[str] = func.apply(null, dependencies.map(function(str) {
-          return ns.scripts[str];
-        }));
-        addToScripts();
-      });
+      if (allLoaded) {
+        pushFunction();
+      }
+      else {
+        // add the main activation script to
+        // the last dependency array.
+        ns.loadedState[dependencies[dependencies.length-1]].arrayList.push(pushFunction);
+      }
     }
   };
 
