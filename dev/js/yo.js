@@ -11,11 +11,28 @@ var Yo = function(ns) {
   ns.loadedState = {};
 
   var add = function() {
-    var str = arguments[0].toLowerCase();
-    var dependencies = arguments[1];
-    var func = arguments[2];
+    var str;
+    var dependencies;
+    var func;
 
-    var noDependencies = dependencies.length < 1;
+    var noDependencies;
+
+    if(arguments && arguments.length > 2) {
+      str = arguments[0].toLowerCase();
+      dependencies = arguments[1];
+      func = arguments[2];
+      noDependencies = dependencies.length < 1;
+    }
+    else if(typeof arguments[0] === 'string' && typeof arguments[1] === 'function') {
+      str = arguments[0].toLowerCase();
+      func = arguments[1];
+      noDependencies = true;
+    }
+    else {
+      console.log('incorrect params added', arguments);
+      return false;
+    }
+
     var allLoaded = true;
 
     var pushFunction = function() {
