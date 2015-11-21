@@ -35,7 +35,7 @@ This imports javascript into 1 file and copies it to a public folder along with 
 #### and add the following line to main.js
 
 ```javascript
-  //= require widgets/test.js
+  //= require widgets/lister.js
 ```
 
 
