@@ -46,6 +46,24 @@ This imports javascript into 1 file and copies it to a public folder along with 
     something.show();
     different.show();
   });
+  
+  Yo.add('Something', function() {
+    var show = function() {
+      console.log('say HI from something');
+    }
+    return {
+      show: show
+    }
+  });
+  
+  Yo.add('Different', function() {
+    var show = function() {
+      console.log('say HI from different');
+    }
+    return {
+      show: show
+    }
+  });
 ```
 
 eyeamaman@gmail.com
