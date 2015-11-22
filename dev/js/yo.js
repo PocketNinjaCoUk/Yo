@@ -1,5 +1,7 @@
 
-var Yo = function(ns) {
+var Yo;
+
+Yo = function(ns) {
   ns.scripts = {};
 
   // namespace.loadedState.tooltip.{
@@ -16,7 +18,10 @@ var Yo = function(ns) {
     var func;
 
     var noDependencies;
+    var allLoaded = true;
 
+    // Check the argument count to see if
+    // 2 or 3 params were entered.
     if(arguments && arguments.length > 2) {
       str = arguments[0].toLowerCase();
       dependencies = arguments[1];
@@ -33,8 +38,6 @@ var Yo = function(ns) {
       return false;
     }
 
-    var allLoaded = true;
-
     var pushFunction = function() {
       ns.scripts[str] = func.apply(null, dependencies.map(function(str) {
         return ns.scripts[str];
@@ -50,13 +53,13 @@ var Yo = function(ns) {
       }
 
       // Check if loadState exists already
-      // then set the basics or run the arrayList
-      // function and set the loaded to true
-      if(!ns.loadedState[str]) {
-        ns.loadedState[str] = {
-          loaded: true,
-          arrayList: []
-        }
+        // then set the basics or run the arrayList
+        // function and set the loaded to true
+        if(!ns.loadedState[str]) {
+          ns.loadedState[str] = {
+            loaded: true,
+            arrayList: []
+          }
       }
       else {
         // set loaded to true
@@ -106,3 +109,8 @@ var Yo = function(ns) {
     add: add
   }
 }(namespace);
+
+/*
+Yo.add('$', function() {
+  // code in here to load the plugin
+});*/
