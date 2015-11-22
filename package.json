@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/eyeamaman/js-dependency-single-page/issues"
   },
-  "homepage": "https://github.com/eyeamaman/js-dependency-single-page"
+  "homepage": "https://github.com/eyeamaman/js-dependency-single-page",
+  "dependencies": {
+    "codecov.io": "^0.1.6"
+  }
 }
