@@ -22,8 +22,52 @@ $ gulp
 
 This imports javascript into 1 file and copies it to a public folder along with the index html page.
 
+### Why?
 
-### To Use
+Try running the code below!
+
+```javascript
+  var namespace = {};
+  namespace.widget = {};
+
+  namespace.widget.utils = function() {
+    return {
+      output: function() {
+        console.log('Utils are used');
+      }
+    }
+  }();
+
+  namespace.widget.tooltip = function(utils){
+    utils.output();
+  }(namespace.widget.utils);
+```
+
+Works lovely doesn't it.  Now run the code below with the 2 functions swapped around
+
+```javascript
+  var namespace = {};
+    namespace.widget = {};
+
+    namespace.widget.tooltip = function(utils){
+      utils.output();
+    }(namespace.widget.utils);
+
+    namespace.widget.utils = function() {
+      return {
+        output: function() {
+          console.log('Utils are used');
+        }
+      }
+    }();
+```
+
+Doesn't work very well at all.  *I can put them in order or have an init function at the bottom of the page though!* You say!
+Well forget you and forget that! :-P
+
+## So lets look at Yo
+
+### How To Use
 
 #### For new scripts
 
