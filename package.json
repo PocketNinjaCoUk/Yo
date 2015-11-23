@@ -23,6 +23,10 @@
   },
   "homepage": "https://github.com/eyeamaman/js-dependency-single-page",
   "dependencies": {
-    "codecov.io": "^0.1.6"
+  },
+  "devDependencies": {
+    "codecov.io": "^0.1.6",
+    "gulp": "^3.9.0",
+    "gulp-include": "^2.0.3"
   }
 }
