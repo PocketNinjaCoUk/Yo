@@ -11,7 +11,6 @@ Currently it seems to work well with raw Javascript.  For importing 3rd party pl
 Download the repo and run
 
 ```
-$ npm install --global gulp
 $ npm install
 ```
 
