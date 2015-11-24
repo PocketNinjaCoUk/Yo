@@ -1,4 +1,4 @@
-Yo.add('Test', function() {
+Yo.add('Test', ['dropdown'], function() {
 
   console.log('test active');
 
