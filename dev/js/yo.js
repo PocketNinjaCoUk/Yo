@@ -1,3 +1,19 @@
+/*
+
+  What does this do?
+
+  1. Creates a new script
+  2. Does script have dependencies?
+  3. NO:    Saves script and save LoadedState as true
+  4. YES:   Saves basic loaded state with true
+  5.        Check if each dependency has loaded
+  6.        Create new basic load states for unloaded ones
+  7.        Push it's addToScript and activation function to the last dependency
+ */
+
+
+
+
 
 var Yo;
 
@@ -26,18 +42,18 @@ Yo = function(ns) {
       ns.scripts[scriptName] = scriptCallback.apply(null, scriptDependencies.map(function(str) {
         return ns.scripts[str];
       }));
-      addToScripts();
+      addToLoadState();
     };
 
-    var createBasicLoadState = function(scriptName, dependencies) {
+    var createBasicLoadState = function(scriptName, dependencies, loaded) {
       ns.loadedState[scriptName] = {
-        loaded: true,
+        loaded: loaded || true,
         arrayList: [],
         dependencies: dependencies
       }
     };
 
-    var addToScripts = function() {
+    var addToLoadState = function() {
       // Check if loadState exists already
       // then set the basics or run the arrayList
       // function and set the loaded to true
@@ -48,7 +64,8 @@ Yo = function(ns) {
         // set loaded to true
         ns.loadedState[scriptName].loaded = true;
 
-        // Run all functions stored by dependencies
+        // Run all functions stored by scripts
+        // dependent
         ns.loadedState[scriptName].arrayList.forEach(function(initFunct) {
           initFunct();
         });
@@ -81,13 +98,16 @@ Yo = function(ns) {
 
 
     if (hasNoDependencies) {
-      // If no then add script directly to the loadedState
+      // Save script straight away
       ns.scripts[scriptName] = scriptCallback();
-      addToScripts();
+
+      // Check and add to loadstate
+      addToLoadState();
     }
     else {
       // add an array of functions ready to fire
       // when the dependency loads
+      //createBasicLoadState(scriptName, scriptDependencies, false);
 
       scriptDependencies.forEach(function(dependencyItem) {
         // Generate loadState for all dependencies
@@ -125,3 +145,83 @@ Yo = function(ns) {
     add: add
   }
 }(namespace);
+
+
+
+Yo = function(ns) {
+  // namespace.loadedState.tooltip.{
+  //    loaded: boolean
+  //    loadedFunc: function
+  //    dependedBy: [string],
+  //    dependencies: [string]
+  // }
+  ns.loadedState = {};
+  ns.scripts = {};
+
+  var add = function() {
+
+    // Main params
+    var scriptName;
+    var scriptDependencies = [];
+    var scriptCallback;
+
+    var hasNoDependencies = true;
+
+
+    // Check and match the argument length
+    // 3: String, Array, Function
+    // 2: String, Function
+    if(arguments && arguments.length > 2) {
+      scriptName = arguments[0].toLowerCase();
+      scriptDependencies = arguments[1];
+      scriptCallback = arguments[2];
+      hasNoDependencies = scriptDependencies.length < 1;
+    }
+    else if(typeof arguments[0] === 'string' && typeof arguments[1] === 'function') {
+      scriptName = arguments[0].toLowerCase();
+      scriptCallback = arguments[1];
+    }
+    else {
+      console.log('incorrect params added', arguments);
+      return false;
+    }
+
+
+    if (hasNoDependencies) {
+      // Save the script straight away
+      ns.scripts[scriptName] = scriptCallback();
+      // ns.loadedState[scriptName] = {};
+      // 1. save to ns.loadedState if not done already
+      // 2. if ns.loadedState exists
+      //    a) set loaded = true
+      //    b) loop dependedBy entries and remove itself from each one
+      //    c) if it is the last dependBy then run it's activate function
+    }
+    else {
+      // if has dependencies
+      // ns.loadedState[scriptName] = {};
+      // 1. save to ns.loadedState {
+      //    loaded: false,
+      //    loadedFunc: activateFunction,
+      //    dependencies: [string]
+      // }
+      // 2. check if each dependency exists and either
+      //    a) check if is loaded
+      //    b) create or add to loadedState for each dependency and add to dependedBy
+      // 3. if all dependencies are loaded then
+      //    a) save the script straight away
+      //    b) save
+    }
+  };
+
+  return {
+    add: add
+  }
+}(namespace);
+
+// namespace.loadedState.tooltip.{
+//    loaded: boolean
+//    loadedFunc: function
+//    dependedBy: [string],
+//    dependencies: [string]
+// }
