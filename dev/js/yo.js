@@ -192,10 +192,38 @@ Yo = function(ns) {
       ns.scripts[scriptName] = scriptCallback();
       // ns.loadedState[scriptName] = {};
       // 1. save to ns.loadedState if not done already
+      if(!ns.loadedState[scriptName]) {
+        ns.loadedState[scriptName] = {
+          loaded: true,
+          dependedBy: [],
+          dependencies: []
+        }
+      }
       // 2. if ns.loadedState exists
-      //    a) set loaded = true
-      //    b) loop dependedBy entries and remove itself from each one
-      //    c) if it is the last dependBy then run it's activate function
+      else {
+        //    a) set loaded = true
+        //    b) loop dependedBy entries and remove itself from each one
+        //    c) if it is the last dependBy then run it's activate function
+
+        ns.loadedState[scriptName].loaded = true;
+
+        ns.loadedState[scriptName].dependedBy.forEach(function(dependByScript) {
+          // remove script from dependedBy
+          for(var i = 0; i < ns.loadedState[scriptName].dependedBy.length; i++) {
+            if (ns.loadedState[dependByScript].dependencies[i] === scriptName) {
+              ns.loadedState[dependByScript].dependencies.splice(i, 1);
+              ns.loadedState[scriptName].dependedBy.splice(i, 1);
+              break;
+            }
+          }
+
+          if (ns.loadedState[dependByScript].dependencies.length < 1) {
+            ns.loadedState[dependByScript].loadedFunc();
+          }
+        });
+
+
+      }
     }
     else {
       // if has dependencies
