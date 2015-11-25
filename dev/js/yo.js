@@ -169,6 +169,9 @@ Yo = function(ns) {
 
     var pushFunction = function() {
       ns.loadedState[scriptName].loaded = true;
+      ns.loadedState[scriptName].loadedFunc = function() {
+        console.log('already loaded');
+      };
       ns.scripts[scriptName] = scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
         return ns.scripts[_scriptName];
       }));
@@ -261,11 +264,22 @@ Yo = function(ns) {
             dependencies: []
           }
         }
+
+        // Check if dependency is dependent on this script
+        // Circular dependency
+        for (var i = 0; i < ns.loadedState[dependencyScriptName].dependencies.length; i++) {
+          if(ns.loadedState[dependencyScriptName].dependencies[i] === scriptName) {
+            console.log('ERROR: You have 1 or more scripts with circular dependencies');
+            console.log('SCRIPT: ' + scriptName + ', DEPENDENCY: ' + dependencyScriptName);
+            break;
+          }
+        }
+
         if(!ns.loadedState[dependencyScriptName].loaded) {
           ns.loadedState[dependencyScriptName].dependedBy.push(scriptName);
         }
         else {
-          pushFunction();
+          ns.loadedState[scriptName].loadedFunc();
         }
       });
 
