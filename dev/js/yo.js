@@ -23,7 +23,7 @@ Yo = function(ns) {
     var pushFunction = function() {
       ns.loadedState[scriptName].loaded = true;
       ns.loadedState[scriptName].loadedFunc = function() {
-        console.log('already loaded');
+        console.log(scriptName + ' called and already loaded,  this needs cleaning up really :-S');
       };
       ns.scripts[scriptName] = scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
         return ns.scripts[_scriptName];
@@ -132,13 +132,10 @@ Yo = function(ns) {
           ns.loadedState[dependencyScriptName].dependedBy.push(scriptName);
         }
         else {
+          // 3. if all dependencies are loaded then
           ns.loadedState[scriptName].loadedFunc();
         }
       });
-
-      // 3. if all dependencies are loaded then
-      //    a) save the script straight away
-      //    b) save
     }
   };
 
