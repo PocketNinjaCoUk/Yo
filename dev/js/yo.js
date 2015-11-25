@@ -167,6 +167,13 @@ Yo = function(ns) {
 
     var hasNoDependencies = true;
 
+    var pushFunction = function() {
+      ns.loadedState[scriptName].loaded = true;
+      ns.scripts[scriptName] = scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
+        return ns.scripts[_scriptName];
+      }));
+    };
+
 
     // Check and match the argument length
     // 3: String, Array, Function
@@ -207,35 +214,61 @@ Yo = function(ns) {
 
         ns.loadedState[scriptName].loaded = true;
 
-        ns.loadedState[scriptName].dependedBy.forEach(function(dependByScript) {
+        ns.loadedState[scriptName].dependedBy.forEach(function(dependByScriptName) {
           // remove script from dependedBy
           for(var i = 0; i < ns.loadedState[scriptName].dependedBy.length; i++) {
-            if (ns.loadedState[dependByScript].dependencies[i] === scriptName) {
-              ns.loadedState[dependByScript].dependencies.splice(i, 1);
+            if (ns.loadedState[dependByScriptName].dependencies[i] === scriptName) {
+              ns.loadedState[dependByScriptName].dependencies.splice(i, 1);
               ns.loadedState[scriptName].dependedBy.splice(i, 1);
               break;
             }
           }
 
-          if (ns.loadedState[dependByScript].dependencies.length < 1) {
-            ns.loadedState[dependByScript].loadedFunc();
+          if (ns.loadedState[dependByScriptName].dependencies.length < 1) {
+            ns.loadedState[dependByScriptName].loadedFunc();
           }
         });
-
-
       }
     }
     else {
       // if has dependencies
-      // ns.loadedState[scriptName] = {};
       // 1. save to ns.loadedState {
       //    loaded: false,
       //    loadedFunc: activateFunction,
       //    dependencies: [string]
       // }
+      if(!ns.loadedState[scriptName]) {
+        ns.loadedState[scriptName] = {
+          loaded: false,
+          loadedFunc: pushFunction,
+          dependedBy: [],
+          dependencies: scriptDependencies
+        }
+      }
+      else {
+        ns.loadedState[scriptName].loadedFunc = pushFunction;
+        ns.loadedState[scriptName].dependencies = scriptDependencies;
+      }
+
       // 2. check if each dependency exists and either
       //    a) check if is loaded
-      //    b) create or add to loadedState for each dependency and add to dependedBy
+      scriptDependencies.forEach(function(dependencyScriptName) {
+        if(!ns.loadedState[dependencyScriptName]) {
+          ns.loadedState[dependencyScriptName] = {
+            loaded: false,
+            loadedFunc: function(){},
+            dependedBy: [],
+            dependencies: []
+          }
+        }
+        if(!ns.loadedState[dependencyScriptName].loaded) {
+          ns.loadedState[dependencyScriptName].dependedBy.push(scriptName);
+        }
+        else {
+          pushFunction();
+        }
+      });
+
       // 3. if all dependencies are loaded then
       //    a) save the script straight away
       //    b) save
