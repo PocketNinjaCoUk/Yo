@@ -1,4 +1,4 @@
-Yo.add('Test', function() {
+Yo.add('Test', ['utilities'], function() {
 
   console.log('test active');
 

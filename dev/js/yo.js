@@ -2,106 +2,140 @@
 var Yo;
 
 Yo = function(ns) {
-  ns.scripts = {};
-
   // namespace.loadedState.tooltip.{
   //    loaded: boolean
   //    loadedFunc: function
-  //    arrayList: [function, function, function],
-  //    dependencies: [object, object, object]
+  //    dependedBy: [string],
+  //    dependencies: [string]
   // }
   ns.loadedState = {};
+  ns.scripts = {};
 
   var add = function() {
-    var str;
-    var dependencies;
-    var func;
 
-    var noDependencies;
-    var allLoaded = true;
+    // Main params
+    var scriptName;
+    var scriptDependencies = [];
+    var scriptCallback;
 
-    // Check the argument count to see if
-    // 2 or 3 params were entered.
+    var hasNoDependencies = true;
+
+    var pushFunction = function() {
+      ns.loadedState[scriptName].loaded = true;
+      ns.loadedState[scriptName].loadedFunc = function() {
+        console.log(scriptName + ' called and already loaded,  this needs cleaning up really :-S');
+      };
+      ns.scripts[scriptName] = scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
+        return ns.scripts[_scriptName];
+      }));
+    };
+
+
+    // Check and match the argument length
+    // 3: String, Array, Function
+    // 2: String, Function
     if(arguments && arguments.length > 2) {
-      str = arguments[0].toLowerCase();
-      dependencies = arguments[1];
-      func = arguments[2];
-      noDependencies = dependencies.length < 1;
+      scriptName = arguments[0].toLowerCase();
+      scriptDependencies = arguments[1];
+      scriptCallback = arguments[2];
+      hasNoDependencies = scriptDependencies.length < 1;
     }
     else if(typeof arguments[0] === 'string' && typeof arguments[1] === 'function') {
-      str = arguments[0].toLowerCase();
-      func = arguments[1];
-      noDependencies = true;
+      scriptName = arguments[0].toLowerCase();
+      scriptCallback = arguments[1];
     }
     else {
       console.log('incorrect params added', arguments);
       return false;
     }
 
-    var pushFunction = function() {
-      ns.scripts[str] = func.apply(null, dependencies.map(function(str) {
-        return ns.scripts[str];
-      }));
-      addToScripts();
-    };
 
-    var addToScripts = function() {
-      // Set namespace scripts to returned function
-
-      if (noDependencies) {
-        ns.scripts[str] = func();
+    if (hasNoDependencies) {
+      // Save the script straight away
+      ns.scripts[scriptName] = scriptCallback();
+      // ns.loadedState[scriptName] = {};
+      // 1. save to ns.loadedState if not done already
+      if(!ns.loadedState[scriptName]) {
+        ns.loadedState[scriptName] = {
+          loaded: true,
+          dependedBy: [],
+          dependencies: []
+        }
       }
-
-      // Check if loadState exists already
-        // then set the basics or run the arrayList
-        // function and set the loaded to true
-        if(!ns.loadedState[str]) {
-          ns.loadedState[str] = {
-            loaded: true,
-            arrayList: []
-          }
-      }
+      // 2. if ns.loadedState exists
       else {
-        // set loaded to true
-        ns.loadedState[str].loaded = true;
+        //    a) set loaded = true
+        //    b) loop dependedBy entries and remove itself from each one
+        //    c) if it is the last dependBy then run it's activate function
 
-        // Run all functions stored by dependencies
-        ns.loadedState[str].arrayList.forEach(function(initFunct) {
-          initFunct();
+        ns.loadedState[scriptName].loaded = true;
+
+        ns.loadedState[scriptName].dependedBy.forEach(function(dependByScriptName) {
+          // remove script from dependedBy
+          for(var i = 0; i < ns.loadedState[scriptName].dependedBy.length; i++) {
+            if (ns.loadedState[dependByScriptName].dependencies[i] === scriptName) {
+              ns.loadedState[dependByScriptName].dependencies.splice(i, 1);
+              ns.loadedState[scriptName].dependedBy.splice(i, 1);
+              break;
+            }
+          }
+
+          if (ns.loadedState[dependByScriptName].dependencies.length < 1) {
+            ns.loadedState[dependByScriptName].loadedFunc();
+          }
         });
-        // reset all functions
-        ns.loadedState[str].arrayList = [];
       }
-    };
-
-    // add to scripts object
-    if (noDependencies) {
-      addToScripts();
     }
     else {
-      // add an array of functions ready to fire
-      // when the dependency loads
-
-      dependencies.forEach(function(entry) {
-        // Generate loadState for all dependencies
-        // if not already.
-        if(!ns.loadedState[entry]) {
-          ns.loadedState[entry] = {
-            loaded: false,
-            arrayList: []
-          };
-          allLoaded = false;
+      // if has dependencies
+      // 1. save to ns.loadedState {
+      //    loaded: false,
+      //    loadedFunc: activateFunction,
+      //    dependencies: [string]
+      // }
+      if(!ns.loadedState[scriptName]) {
+        ns.loadedState[scriptName] = {
+          loaded: false,
+          loadedFunc: pushFunction,
+          dependedBy: [],
+          dependencies: scriptDependencies
         }
-      });
-
-      if (allLoaded) {
-        pushFunction();
       }
       else {
-        // add the main activation script to
-        // the last dependency array.
-        ns.loadedState[dependencies[dependencies.length-1]].arrayList.push(pushFunction);
+        ns.loadedState[scriptName].loadedFunc = pushFunction;
+        ns.loadedState[scriptName].dependencies = scriptDependencies;
       }
+
+      // 2. check if each dependency exists and either
+      //    a) check if is loaded
+      scriptDependencies.forEach(function(dependencyScriptName) {
+        if(!ns.loadedState[dependencyScriptName]) {
+          ns.loadedState[dependencyScriptName] = {
+            loaded: false,
+            loadedFunc: function(){},
+            dependedBy: [],
+            dependencies: []
+          }
+        }
+
+        // Check if dependency is dependent on this script
+        // Circular dependency
+        for (var i = 0; i < ns.loadedState[dependencyScriptName].dependencies.length; i++) {
+          if(ns.loadedState[dependencyScriptName].dependencies[i] === scriptName) {
+            console.log('ERROR: You have 1 or more scripts with circular dependencies');
+            console.log('SCRIPT: ' + scriptName + ', DEPENDENCY: ' + dependencyScriptName);
+            break;
+          }
+        }
+
+        if(!ns.loadedState[dependencyScriptName].loaded) {
+          ns.loadedState[dependencyScriptName].dependedBy.push(scriptName);
+        }
+        else {
+          // 3. if all dependencies are loaded then
+          ns.loadedState[scriptName].loadedFunc();
+        }
+      });
     }
   };
 
@@ -109,8 +143,3 @@ Yo = function(ns) {
     add: add
   }
 }(namespace);
-
-/*
-Yo.add('$', function() {
-  // code in here to load the plugin
-});*/
