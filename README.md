@@ -94,7 +94,7 @@ Well forget you and forget that! :-P
   Yo.add('Something', function() {
     var show = function() {
       console.log('say HI from something');
-    }
+    };
     return {
       show: show
     }
@@ -103,7 +103,7 @@ Well forget you and forget that! :-P
   Yo.add('Different', function() {
     var show = function() {
       console.log('say HI from different');
-    }
+    };
     return {
       show: show
     }

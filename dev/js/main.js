@@ -4,13 +4,16 @@
 
 
 // INIT
-//= require start.js
-//= require yo.js
+//= require scripts/yo.js
+//= require scripts/start.js
 
 
 // TEST EMPTY WIDGETS
-//= require widgets/utilities.js
-//= require widgets/test.js
-//= require widgets/egg.js
-//= require widgets/tooltip.js
-//= require widgets/dropdown.js
+//= require scripts/widgets/utilities.js
+//= require scripts/widgets/test.js
+//= require scripts/widgets/egg.js
+//= require scripts/widgets/tooltip.js
+//= require scripts/widgets/dropdown.js
+//= require scripts/widgets/example.js
+//= require scripts/widgets/something.js
+//= require scripts/widgets/different.js

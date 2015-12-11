@@ -4,8 +4,6 @@ var gulp = require('gulp');
 // https://www.npmjs.com/package/gulp-include
 var include = require('gulp-include');
 
-
-
 gulp.task('scripts', function() {
   gulp.src('./dev/js/main.js')
     .pipe(include())
