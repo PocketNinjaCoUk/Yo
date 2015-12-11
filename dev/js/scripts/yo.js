@@ -76,14 +76,17 @@ var Yo = function() {
       return arguments[0];
     };
 
+    var arrayClone = function(arr) {
+      return arr.slice(0);
+    };
+
     var createOrEditLoadedState = function(data, script) {
       var script = script || scriptName;
       ns.loadedState[script] = extend({
         loaded: false,
         loadedFunc: function(){},
         dependedBy: [],
-        dependencies: [],
-        dependencyCheckList: []
+        dependencies: []
       }, ns.loadedState[script], data);
     };
 
@@ -107,14 +110,14 @@ var Yo = function() {
       ns.loadedState[scriptName].dependedBy.forEach(function(otherScript) {
         // remove itself from dependedBy
         for(var i = 0; i < ns.loadedState[scriptName].dependedBy.length; i++) {
-          if (ns.loadedState[otherScript].dependencyCheckList[i] === scriptName) {
-            ns.loadedState[otherScript].dependencyCheckList.splice(i, 1);
+          if (ns.loadedState[otherScript].dependencies[i] === scriptName) {
+            ns.loadedState[otherScript].dependencies.splice(i, 1);
             ns.loadedState[scriptName].dependedBy.splice(i, 1);
             break;
           }
         }
 
-        if (ns.loadedState[otherScript].dependencyCheckList.length < 1) {
+        if (ns.loadedState[otherScript].dependencies.length < 1) {
           ns.loadedState[otherScript].loaded = true;
           ns.loadedState[otherScript].loadedFunc();
         }
@@ -160,8 +163,7 @@ var Yo = function() {
       // }
       createOrEditLoadedState({
         loadedFunc: pushFunction,
-        dependencies: scriptDependencies,
-        dependencyCheckList: scriptDependencies
+        dependencies: arrayClone(scriptDependencies)
       });
 
       // 2. check if each dependency exists and either
