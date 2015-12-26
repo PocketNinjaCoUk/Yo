@@ -69,6 +69,15 @@ Well forget you and forget that! :-P
 
 ### How To Use
 
+```javascript
+  var CompanyName = {};
+  CompanyName.whatever = {};
+
+  Yo.init({
+    namespace: CompanyName.whatever
+  });
+```
+
 #### For new scripts
 
 ```javascript
