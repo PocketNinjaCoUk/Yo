@@ -1,5 +1,4 @@
 # Yo
-# Currently not working :-S But working on it!!!!!
 
 ## Dependency on a single page script
 
