@@ -22,11 +22,12 @@
     "url": "https://github.com/eyeamaman/js-dependency-single-page/issues"
   },
   "homepage": "https://github.com/eyeamaman/js-dependency-single-page",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "codecov.io": "^0.1.6",
+    "grunt": "^0.4.5",
     "gulp": "^3.9.0",
-    "gulp-include": "^2.0.3"
+    "gulp-include": "^2.0.3",
+    "gulp-jsdoc": "^0.1.5"
   }
 }

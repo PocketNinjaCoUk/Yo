@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>JSDoc: pocketninja Source: yo.js</title>
+
+  <script src="scripts/prettify/prettify.js"> </script>
+  <script src="scripts/prettify/lang-css.js"> </script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+  <script src="scripts/jquery-2.1.4.min.js"></script>
+  <script src="scripts/sub-nav.js"></script>
+  <script src="scripts/class-maker.js"></script>
+  <script src="scripts/side-menu.js"></script>
+</head>
+
+<body class="page" data-class-maker='{"text": "Source: yo.js", "generateSelectedData": true}'>
+  <div id="main" class="main">
+    <h1 class="page-title">Source: yo.js</h1>
+    
+
+
+
+    
+<section>
+  <article>
+    <div class="prettyprint-wrapper">
+      <pre class="prettyprint source linenums">
+        <code>/**
+ * Yo, the single page dependency management script created by pocketninja for his own amusement
+ *
+ * @module Yo
+ * @returns {object} public functions
+ */
+var Yo = function() {
+  // namespace.loadedState.tooltip.{
+  //    loaded: boolean
+  //    loadedFunc: function
+  //    dependedBy: [string],
+  //    dependencies: [string]
+  // }
+
+  /**
+   * container of the namespace object provided by the user with Yo.init()
+   * @private
+   * @var {object} ns
+   */
+  var ns;
+
+
+  /**
+   * After creating Yo you need to provide it with your main namespace to any level within it. Like "company" or "company.cool.scripts"
+   *
+   * @method init
+   * @param {object} data - initial data object.
+   * @param {object} data.namespace - users main script namespace.
+   *
+   * @example
+   * Yo.init({
+   *   namespace: your.script.name.space
+   * });
+   */
+  var init = function(data){
+    ns = data.namespace;
+    ns.loadedState = {};
+    ns.scripts = {};
+  };
+
+
+  /**
+   * For adding new scripts with their own dependencies
+   *
+   * @method add
+   * @param {string} scriptName Script name
+   * @param {array} [scriptDependencies=undefined] Script list of dependencies
+   * @param {function} scriptCallback Script module callback
+   *
+   * @example
+   * Yo.add('WidgetName', ['dependency1', 'dependency2', 'etc'], function() {
+   *   // your code in here
+   *   return {}
+   * });
+   */
+  var add = function() {
+
+    // Main params
+    var scriptName;
+    var scriptDependencies = [];
+    var scriptCallback;
+
+    var hasNoDependencies = true;
+
+    /**
+     * Callback added to loadState[scriptName].loadedFunc which is run once all of it's dependencies have loaded
+     *
+     * @function pushFunction
+     * @private
+     */
+    var pushFunction = function() {
+      ns.loadedState[scriptName].loaded = true;
+      ns.loadedState[scriptName].loadedFunc = function() {
+        console.log(scriptName + ' called and already loaded,  this needs cleaning up really :-S');
+      };
+      ns.scripts[scriptName] = scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
+        return ns.scripts[_scriptName];
+      }));
+    };
+
+
+    // Check and match the argument length
+    // 3: String, Array, Function
+    // 2: String, Function
+    if(arguments &amp;&amp; arguments.length > 2) {
+      scriptName = arguments[0].toLowerCase();
+      scriptDependencies = arguments[1];
+      scriptCallback = arguments[2];
+      hasNoDependencies = scriptDependencies.length &lt; 1;
+    }
+    else if(typeof arguments[0] === 'string' &amp;&amp; typeof arguments[1] === 'function') {
+      scriptName = arguments[0].toLowerCase();
+      scriptCallback = arguments[1];
+    }
+    else {
+      console.log('incorrect params added', arguments);
+      return false;
+    }
+
+
+    if (hasNoDependencies) {
+      // Save the script straight away
+      ns.scripts[scriptName] = scriptCallback();
+      // ns.loadedState[scriptName] = {};
+      // 1. save to ns.loadedState if not done already
+      if(!ns.loadedState[scriptName]) {
+        ns.loadedState[scriptName] = {
+          loaded: true,
+          dependedBy: [],
+          dependencies: []
+        }
+      }
+      // 2. if ns.loadedState exists
+      else {
+        //    a) set loaded = true
+        //    b) loop dependedBy entries and remove itself from each one
+        //    c) if it is the last dependBy then run it's activate function
+
+        ns.loadedState[scriptName].loaded = true;
+
+        ns.loadedState[scriptName].dependedBy.forEach(function(dependByScriptName) {
+          // remove script from dependedBy
+          for(var i = 0; i &lt; ns.loadedState[scriptName].dependedBy.length; i++) {
+            if (ns.loadedState[dependByScriptName].dependencies[i] === scriptName) {
+              ns.loadedState[dependByScriptName].dependencies.splice(i, 1);
+              ns.loadedState[scriptName].dependedBy.splice(i, 1);
+              break;
+            }
+          }
+
+          if (ns.loadedState[dependByScriptName].dependencies.length &lt; 1) {
+            ns.loadedState[dependByScriptName].loaded = true;
+            ns.loadedState[dependByScriptName].loadedFunc();
+          }
+        });
+      }
+    }
+    else {
+      // if has dependencies
+      // 1. save to ns.loadedState {
+      //    loaded: false,
+      //    loadedFunc: activateFunction,
+      //    dependencies: [string]
+      // }
+      if(!ns.loadedState[scriptName]) {
+        ns.loadedState[scriptName] = {
+          loaded: false,
+          loadedFunc: pushFunction,
+          dependedBy: [],
+          dependencies: scriptDependencies
+        }
+      }
+      else {
+        ns.loadedState[scriptName].loadedFunc = pushFunction;
+        ns.loadedState[scriptName].dependencies = scriptDependencies;
+      }
+
+      // 2. check if each dependency exists and either
+      //    a) check if is loaded
+      scriptDependencies.forEach(function(dependencyScriptName) {
+        if(!ns.loadedState[dependencyScriptName]) {
+          ns.loadedState[dependencyScriptName] = {
+            loaded: false,
+            loadedFunc: function(){},
+            dependedBy: [],
+            dependencies: []
+          }
+        }
+
+        // Check if dependency is dependent on this script
+        // Circular dependency
+        for (var i = 0; i &lt; ns.loadedState[dependencyScriptName].dependencies.length; i++) {
+          if(ns.loadedState[dependencyScriptName].dependencies[i] === scriptName) {
+            console.log('ERROR: You have 1 or more scripts with circular dependencies');
+            console.log('SCRIPT: ' + scriptName + ', DEPENDENCY: ' + dependencyScriptName);
+            break;
+          }
+        }
+
+        if(!ns.loadedState[dependencyScriptName].loaded) {
+          ns.loadedState[dependencyScriptName].dependedBy.push(scriptName);
+        }
+        else {
+          // 3. if all dependencies are loaded then
+          ns.loadedState[scriptName].loadedFunc();
+        }
+      });
+    }
+  };
+
+  return {
+    init: init,
+    add: add
+  }
+}();</code>
+      </pre>
+    </div>
+  </article>
+</section>
+
+
+
+
+  </div>
+
+  <div id="subNav" class="sub-nav">
+    <div class="shuriken"></div>
+  </div>
+
+  <nav id="sideNav" class="side-nav">
+    <div class="logo"></div>
+    <h2 class="nav-home"><a href="index.html">Home</a></h2><h3 class="side-menu-item-heading">Modules</h3><ul class="side-menu-modules-list"><li class="side-menu-item book"><a href="module-Book.html">Book</a></li><li class="side-menu-item dropdown"><a href="module-Dropdown.html">Dropdown</a></li><li class="side-menu-item egg"><a href="module-Egg.html">Egg</a></li><li class="side-menu-item yo"><a href="module-Yo.html">Yo</a></li></ul><h3 class="side-menu-item-heading">Namespaces</h3><ul class="side-menu-namespaces-list"><li class="side-menu-item companyname"><a href="CompanyName.html">CompanyName</a></li></ul>
+    <img src="styles/img/ninja-in-tree.jpg" class="side-nav-ninja">
+  </nav>
+
+  <br class="clear">
+
+  <footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Dec 10 2015 21:59:00 GMT+0000 (GMT Standard Time)
+    <p>Pocketninja 1.0 Theme Dec/2015 with additional class control and javascript features created by <a href="http://www.pocketninja.co.uk" target="_blank">pocketninja</a></p>
+    <p>Github account <a href="https://github.com/eyeamaman" target="_blank">eyeamaman</a></p>
+  </footer>
+
+  <script> prettyPrint(); </script>
+  <script src="scripts/linenumber.js"> </script>
+</body>
+</html>
