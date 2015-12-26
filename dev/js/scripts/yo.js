@@ -76,6 +76,28 @@ var Yo = function() {
       return arguments[0];
     };
 
+    var isTypeOf = function(str, obj) {
+      return '[object ' + str + ']' === Object.prototype.toString.call(obj);
+    };
+
+    var argumentChecker = function(args, argSequence) {
+      if(args.length === argSequence.length) {
+        var i, val;
+        for (i = 0; i < args.length; i++) {
+          val = args[i];
+          if (!isTypeOf(argSequence[i], val))   {
+            console.log('Error with value comparison: ' + val + ', EXPECTED: ' + argSequence[i] );
+            return false;
+          }
+        }
+
+        return true;
+      }
+      else {
+        return false;
+      }
+    };
+
     var arrayClone = function(arr) {
       return arr.slice(0);
     };
@@ -128,13 +150,13 @@ var Yo = function() {
     // Check and match the argument length
     // 3: String, Array, Function
     // 2: String, Function
-    if(arguments && arguments.length > 2) {
+    if(argumentChecker(arguments, ['String', 'Array', 'Function'])) {
       scriptName = arguments[0].toLowerCase();
       scriptDependencies = arguments[1];
       scriptCallback = arguments[2];
       hasNoDependencies = scriptDependencies.length < 1;
     }
-    else if(typeof arguments[0] === 'string' && typeof arguments[1] === 'function') {
+    else if(argumentChecker(arguments, ['String', 'Function'])) {
       scriptName = arguments[0].toLowerCase();
       scriptCallback = arguments[1];
     }
@@ -184,7 +206,9 @@ var Yo = function() {
         }*/
         if(ns.loadedState[dependencyScriptName].loaded) {
           // 3. if all dependencies are loaded then
-          ns.loadedState[scriptName].loadedFunc();
+          if (!ns.loadedState[scriptName].loaded) {
+            ns.loadedState[scriptName].loadedFunc();
+          }
         }
         else {
           // Add scriptName to the dependency loadedState.dependBy array
