@@ -85,6 +85,13 @@ Well forget you and forget that! :-P
   });
 ```
 
+Or
+
+```javascript
+  Yo.add('Lister', function() {
+  });
+```
+
 #### and add the following line to main.js
 
 ```javascript
