@@ -1,12 +1,12 @@
 Yo.add('Test', function() {
 
-  console.log('test active');
+  console.log('Widget: Test active');
 
   var
     number = 10,
 
-    output = function() {
-      console.log('output from test');
+    output = function(str) {
+      console.log('output from test' + str);
     },
     setNumber = function(num) {
       number = num;

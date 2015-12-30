@@ -1,5 +1,5 @@
 Yo.add('Utilities', function() {
-  console.log('Utilities active');
+  console.log('Widget: Utilities active');
 
   var
     add10 = function(num) {

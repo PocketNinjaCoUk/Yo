@@ -1,6 +1,6 @@
 
 Yo.add('Something', function() {
-  console.log('Something active');
+  console.log('Widget: Something active');
 
   var getMe = function() {
     console.log('say HI from something');

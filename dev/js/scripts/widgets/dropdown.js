@@ -8,11 +8,8 @@
  * @returns {object} public functions
  */
 Yo.add('Dropdown', ['test', 'utilities'], function(test, utils) {
-  //console.log('dropdown active');
-  //test.output();
-  //console.log('dropdown num: ' + test.getNumber());
-  //test.setNumber(1000);
-  //console.log('UTILITIES func add10: ' + utils.add10(100));
+  console.log('Widget: Dropdown active');
+  test.output(' from dropdown');
 
   /**
    * dropdown test function

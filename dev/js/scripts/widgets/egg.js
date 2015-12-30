@@ -7,10 +7,10 @@
  * @returns {object} functions
  */
 Yo.add('Egg', ['test', 'tooltip', 'dropdown'], function(test, tooltip, dropdown) {
-  console.log('Egg active');
-  //test.output();
-  //console.log('egg num: ' + test.getNumber() + ' Now lets change it and see it called by other scripts, should be 1000');
-  //test.setNumber(1000);
+  console.log('Widget: Egg active');
+  test.output(' from egg');
+  tooltip.output();
+  dropdown.output();
 
   /**
    * Egg test output function

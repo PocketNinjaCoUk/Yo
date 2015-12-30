@@ -1,6 +1,6 @@
 
 Yo.add('Lister', ['something', 'different'], function(something, different) {
-  console.log('Lister active');
+  console.log('Widget: Lister active');
 
   something.getMe();
   different.getMe();
