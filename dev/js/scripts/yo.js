@@ -8,7 +8,7 @@
  * @returns {object} public functions
  */
 var Yo = function() {
-  // namespace.loadedState.tooltip.{
+  // Yo.loadedState.tooltip.{
   //    loaded: boolean
   //    loadedFunc: function
   //    dependedBy: [string],
@@ -37,7 +37,7 @@ var Yo = function() {
    */
   var init = function(data){
     ns = data.namespace;
-    ns.loadedState = {};
+    Yo.loadedState = {};
     ns.scripts = {};
   };
 
@@ -102,12 +102,24 @@ var Yo = function() {
 
     var createOrEditLoadedState = function(data, script) {
       script = script || scriptName;
-      ns.loadedState[script] = extend({
+      Yo.loadedState[script] = extend({
         loaded: false,
         loadedFunc: function(){},
         dependedBy: [],
         dependencies: []
-      }, ns.loadedState[script], data);
+      }, Yo.loadedState[script], data);
+    };
+
+    var addToNameSpace = function(str) {
+      var namespaceArr = str.split('.');
+      var currentObj = ns.scripts;
+
+      for(var i = 0; i < namespaceArr.length; i++) {
+        if(currentObj[namespaceArr[i]] === undefined) {
+          currentObj[namespaceArr[i]] = {};
+        }
+        currentObj = currentObj[namespaceArr[i]];
+      }
     };
 
     /**
@@ -127,26 +139,26 @@ var Yo = function() {
     };
 
     var activateScript = function(script) {
-      if(ns.loadedState[script].loaded) {
-        ns.scripts[script] = ns.loadedState[script].loadedFunc();
+      if(Yo.loadedState[script].loaded) {
+        ns.scripts[script] = Yo.loadedState[script].loadedFunc();
       }
     };
 
 
     var checkDependedBy = function() {
-      var dependedBy = ns.loadedState[scriptName].dependedBy;
+      var dependedBy = Yo.loadedState[scriptName].dependedBy;
 
       dependedBy.forEach(function(otherScript) {
         for(var i = 0; i < dependedBy.length; i++) {
-          if (ns.loadedState[otherScript].dependencies[i] === scriptName) {
-            ns.loadedState[otherScript].dependencies.splice(i, 1);
+          if (Yo.loadedState[otherScript].dependencies[i] === scriptName) {
+            Yo.loadedState[otherScript].dependencies.splice(i, 1);
             dependedBy.splice(i, 1);
             break;
           }
         }
 
-        if (ns.loadedState[otherScript].dependencies.length < 1) {
-          ns.loadedState[otherScript].loaded = true;
+        if (Yo.loadedState[otherScript].dependencies.length < 1) {
+          Yo.loadedState[otherScript].loaded = true;
           activateScript(otherScript);
         }
       });
@@ -155,7 +167,7 @@ var Yo = function() {
 
     var checkDependencies = function() {
       var allDependenciesLoaded = true;
-      var scriptDependents = ns.loadedState[scriptName].dependencies;
+      var scriptDependents = Yo.loadedState[scriptName].dependencies;
       var dependencyScriptName;
 
       var looper = function() {
@@ -163,12 +175,12 @@ var Yo = function() {
           dependencyScriptName = scriptDependents[i];
           // If script name loadState doesn't
           // exist then create one
-          if(!ns.loadedState[dependencyScriptName]) {
+          if(!Yo.loadedState[dependencyScriptName]) {
             createOrEditLoadedState({}, dependencyScriptName);
           }
 
-          if(!ns.loadedState[dependencyScriptName].loaded) {
-            ns.loadedState[dependencyScriptName].dependedBy.push(scriptName);
+          if(!Yo.loadedState[dependencyScriptName].loaded) {
+            Yo.loadedState[dependencyScriptName].dependedBy.push(scriptName);
             allDependenciesLoaded = false;
           }
           else {
@@ -182,7 +194,7 @@ var Yo = function() {
       looper();
 
       if(allDependenciesLoaded) {
-        ns.loadedState[scriptName].loaded = true;
+        Yo.loadedState[scriptName].loaded = true;
       }
     };
 
@@ -202,7 +214,7 @@ var Yo = function() {
       return false;
     }
 
-    console.log('YO.ADD: ' + scriptName);
+    //console.log('YO.ADD: ' + scriptName);
 
     if (hasNoDependencies) {
       createOrEditLoadedState({
