@@ -21,6 +21,7 @@ var Yo = function() {
    * @var {object} ns
    */
   var ns;
+  var scriptRoot = 'module';
 
 
   /**
@@ -32,13 +33,18 @@ var Yo = function() {
    *
    * @example
    * Yo.init({
-   *   namespace: your.script.name.space
+   *   namespace: your.script.name.space,
+   *   scriptRoot: 'cheese'
    * });
    */
   var init = function(data){
-    ns = data.namespace;
+    ns = data.namespace || Yo;
     Yo.loadedState = {};
-    ns.scripts = {};
+
+    if(data.scriptRoot) {
+      scriptRoot = data.scriptRoot;
+    }
+    ns[scriptRoot] = ns[data.scriptRoot] || {};
   };
 
   var isTypeOf = function(str, obj) {
@@ -50,8 +56,8 @@ var Yo = function() {
       var i, val;
       for (i = 0; i < args.length; i++) {
         val = args[i];
-        if (!isTypeOf(argSequence[i], val))   {
-          console.log('Error with value comparison: ' + val + ', EXPECTED: ' + argSequence[i] );
+        if (!isTypeOf(argSequence[i], val)) {
+          console.log('Error with value comparison: ' + val + ', EXPECTED: ' + argSequence[i]);
           return false;
         }
       }
@@ -112,7 +118,7 @@ var Yo = function() {
 
     var addToNameSpace = function(str) {
       var namespaceArr = str.split('.');
-      var currentObj = ns.scripts;
+      var currentObj = ns[scriptRoot];
 
       for(var i = 0; i < namespaceArr.length; i++) {
         if(currentObj[namespaceArr[i]] === undefined) {
@@ -134,13 +140,13 @@ var Yo = function() {
         loadedFunc: function() { console.log(scriptName + ' called and already loaded'); }
       });
       return scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
-        return ns.scripts[_scriptName];
+        return ns[scriptRoot][_scriptName];
       }));
     };
 
     var activateScript = function(script) {
       if(Yo.loadedState[script].loaded) {
-        ns.scripts[script] = Yo.loadedState[script].loadedFunc();
+        ns[scriptRoot][script] = Yo.loadedState[script].loadedFunc();
       }
     };
 
