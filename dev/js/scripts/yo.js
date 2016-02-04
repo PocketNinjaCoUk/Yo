@@ -106,25 +106,41 @@ var Yo = function() {
     var scriptCallback;
     var hasNoDependencies = true;
 
+    var getLoadedState = function(_script) {
+      return addToNameSpace(_script, Yo.loadedState);
+      //return Yo.loadedState[_script];
+    };
+
+    var getScriptRoot = function(_script) {
+      return addToNameSpace(_script);
+      //return ns[scriptRoot][_script];
+    };
+
     var createOrEditLoadedState = function(data, script) {
       script = script || scriptName;
-      Yo.loadedState[script] = extend({
+      var loadedStateScript = getLoadedState(script);
+
+      loadedStateScript = extend({
         loaded: false,
         loadedFunc: function(){},
         dependedBy: [],
         dependencies: []
-      }, Yo.loadedState[script], data);
+      }, loadedStateScript, data);
     };
 
-    var addToNameSpace = function(str) {
-      var namespaceArr = str.split('.');
-      var currentObj = ns[scriptRoot];
+    var addToNameSpace = function(_str, _nsObject) {
+      var namespaceArr = _str.split('.');
+      var currentObj = _nsObject || ns[scriptRoot];
+      var checkEmptyObject = function(_nsPath) {
+        return (_nsPath === undefined)? {} : _nsPath;
+      };
+
+      if (namespaceArr.length === 1) {
+        return checkEmptyObject(currentObj[_str]);
+      }
 
       for(var i = 0; i < namespaceArr.length; i++) {
-        if(currentObj[namespaceArr[i]] === undefined) {
-          currentObj[namespaceArr[i]] = {};
-        }
-        currentObj = currentObj[namespaceArr[i]];
+        currentObj = checkEmptyObject(currentObj[namespaceArr[i]]);
       }
     };
 
@@ -140,31 +156,32 @@ var Yo = function() {
         loadedFunc: function() { console.log(scriptName + ' called and already loaded'); }
       });
       return scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
-        return ns[scriptRoot][_scriptName];
+        return getScriptRoot(_scriptName);
       }));
     };
 
     var activateScript = function(script) {
-      if(Yo.loadedState[script].loaded) {
-        ns[scriptRoot][script] = Yo.loadedState[script].loadedFunc();
+      var scriptRoot = getScriptRoot(script);
+      if(getLoadedState(script).loaded) {
+        scriptRoot = getLoadedState(script).loadedFunc();
       }
     };
 
 
     var checkDependedBy = function() {
-      var dependedBy = Yo.loadedState[scriptName].dependedBy;
+      var dependedBy = getLoadedState(scriptName).dependedBy;
 
       dependedBy.forEach(function(otherScript) {
         for(var i = 0; i < dependedBy.length; i++) {
-          if (Yo.loadedState[otherScript].dependencies[i] === scriptName) {
-            Yo.loadedState[otherScript].dependencies.splice(i, 1);
+          if (getLoadedState(otherScript).dependencies[i] === scriptName) {
+            getLoadedState(otherScript).dependencies.splice(i, 1);
             dependedBy.splice(i, 1);
             break;
           }
         }
 
-        if (Yo.loadedState[otherScript].dependencies.length < 1) {
-          Yo.loadedState[otherScript].loaded = true;
+        if (getLoadedState(otherScript).dependencies.length < 1) {
+          getLoadedState(otherScript).loaded = true;
           activateScript(otherScript);
         }
       });
@@ -173,7 +190,7 @@ var Yo = function() {
 
     var checkDependencies = function() {
       var allDependenciesLoaded = true;
-      var scriptDependents = Yo.loadedState[scriptName].dependencies;
+      var scriptDependents = getLoadedState(scriptName).dependencies;
       var dependencyScriptName;
 
       var looper = function() {
@@ -181,12 +198,12 @@ var Yo = function() {
           dependencyScriptName = scriptDependents[i];
           // If script name loadState doesn't
           // exist then create one
-          if(!Yo.loadedState[dependencyScriptName]) {
+          if(!getLoadedState(dependencyScriptName)) {
             createOrEditLoadedState({}, dependencyScriptName);
           }
 
-          if(!Yo.loadedState[dependencyScriptName].loaded) {
-            Yo.loadedState[dependencyScriptName].dependedBy.push(scriptName);
+          if(!getLoadedState(dependencyScriptName).loaded) {
+            getLoadedState(dependencyScriptName).dependedBy.push(scriptName);
             allDependenciesLoaded = false;
           }
           else {
@@ -200,7 +217,7 @@ var Yo = function() {
       looper();
 
       if(allDependenciesLoaded) {
-        Yo.loadedState[scriptName].loaded = true;
+        getLoadedState(scriptName).loaded = true;
       }
     };
 

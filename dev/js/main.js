@@ -19,3 +19,5 @@
 //= require scripts/widgets/something.js
 //= require scripts/widgets/different.js
 //= require scripts/widgets/objectMaker.js
+
+//= require scripts/page/home.js
