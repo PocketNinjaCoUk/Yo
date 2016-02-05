@@ -42,9 +42,9 @@ var Yo = function() {
     Yo.loadedState = {};
 
     if(data.scriptRoot) {
-      scriptRoot = data.scriptRoot;
+      newScriptRoot = data.scriptRoot;
     }
-    ns[scriptRoot] = ns[data.scriptRoot] || {};
+    ns[scriptRoot] = ns[newScriptRoot] || {};
   };
 
   var isTypeOf = function(str, obj) {
@@ -111,21 +111,41 @@ var Yo = function() {
       //return Yo.loadedState[_script];
     };
 
+    var setLoadedState = function(_script, _data) {
+      var namespaceArr = _script.split('.');
+      var currentObj = Yo.loadedState;
+      var checkEmptyObject = function(_nsPath) {
+        return (_nsPath === undefined)? {} : _nsPath;
+      };
+
+      if (namespaceArr.length > 1) {
+        for(var i = 0; i < namespaceArr.length; i++) {
+          currentObj = checkEmptyObject(currentObj[namespaceArr[i]]);
+        }
+      }
+
+      extend(currentObj, _data);
+    };
+
     var getScriptRoot = function(_script) {
       return addToNameSpace(_script);
       //return ns[scriptRoot][_script];
     };
 
-    var createOrEditLoadedState = function(data, script) {
-      script = script || scriptName;
-      var loadedStateScript = getLoadedState(script);
+    var setScriptRoot = function(_script, _function) {
+      var namespaceArr = _script.split('.');
+      var currentObj = ns[scriptRoot];
+      var checkEmptyObject = function(_nsPath) {
+        return (_nsPath === undefined)? {} : _nsPath;
+      };
 
-      loadedStateScript = extend({
-        loaded: false,
-        loadedFunc: function(){},
-        dependedBy: [],
-        dependencies: []
-      }, loadedStateScript, data);
+      if (namespaceArr.length > 1) {
+        for(var i = 0; i < namespaceArr.length; i++) {
+          currentObj = checkEmptyObject(currentObj[namespaceArr[i]]);
+        }
+      }
+
+      currentObj = _function();
     };
 
     var addToNameSpace = function(_str, _nsObject) {
@@ -142,6 +162,17 @@ var Yo = function() {
       for(var i = 0; i < namespaceArr.length; i++) {
         currentObj = checkEmptyObject(currentObj[namespaceArr[i]]);
       }
+    };
+
+    var createOrEditLoadedState = function(data, script) {
+      script = script || scriptName;
+
+      setLoadedState(script, extend({
+        loaded: false,
+        loadedFunc: function(){},
+        dependedBy: [],
+        dependencies: []
+      }, getLoadedState(script), data));
     };
 
     /**
@@ -161,9 +192,10 @@ var Yo = function() {
     };
 
     var activateScript = function(script) {
-      var scriptRoot = getScriptRoot(script);
+      //var scriptRoot = getScriptRoot(script);
       if(getLoadedState(script).loaded) {
-        scriptRoot = getLoadedState(script).loadedFunc();
+        setScriptRoot(script, getLoadedState(script).loadedFunc);
+        //ns[scriptRoot][script] = getLoadedState(script).loadedFunc();
       }
     };
 
