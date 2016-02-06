@@ -116,13 +116,17 @@ var Yo = function() {
      * @returns {object || boolean} functions
      *
      */
-    var nsGet = function(_nsStr, _nsObject) {
+    var nsGet = function(_nsStr, _nsObject, _getObjectRoot) {
       var keyArr = _nsStr.split('.');
       var currentObj = _nsObject;
+      _getObjectRoot = _getObjectRoot || false;
 
       for(var i = 0; i < keyArr.length; i++) {
         if (!currentObj[keyArr[i]]) {
           return false;
+        }
+        if(_getObjectRoot && (i === keyArr.length - 1)) {
+          return currentObj;
         }
         currentObj = currentObj[keyArr[i]];
       }
@@ -144,13 +148,17 @@ var Yo = function() {
      * @returns {object} Section of the object param
      *
      */
-    var nsSet = function(_nsStr, _nsObject) {
+    var nsSet = function(_nsStr, _nsObject, _getObjectRoot) {
       var keyArr = _nsStr.split('.');
       var currentObj = _nsObject;
+      _getObjectRoot = _getObjectRoot || false;
 
       if (keyArr.length < 2) {
         if(!currentObj[_nsStr]) {
           currentObj[_nsStr] = {};
+        }
+        if(_getObjectRoot) {
+          return _nsObject;
         }
         return currentObj[_nsStr];
       }
@@ -158,6 +166,9 @@ var Yo = function() {
         for(var i = 0; i < keyArr.length; i++) {
           if (!currentObj[keyArr[i]]) {
             currentObj[keyArr[i]] = {};
+          }
+          if(_getObjectRoot && (i === keyArr.length - 1)) {
+            return currentObj;
           }
           currentObj = currentObj[keyArr[i]];
         }
@@ -177,9 +188,9 @@ var Yo = function() {
     };
 
     var activateScript = function(_script) {
-      var nsLocation = nsSet(_script, ns[scriptRoot]);
+      var nsLocation = nsSet(_script, ns[scriptRoot], true);
       if(getLoadedState(_script).loaded) {
-        nsLocation = getLoadedState(_script).loadedFunc();
+        nsLocation[_script] = getLoadedState(_script).loadedFunc();
       }
     };
 
