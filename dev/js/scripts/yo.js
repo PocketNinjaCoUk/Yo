@@ -105,36 +105,17 @@ var Yo = function() {
     var scriptCallback;
     var hasNoDependencies = true;
 
-    var nsMngr = function() {
-      var keyArr;
-      var currentObj;
 
-      var get = function(_nsObject, _nsStr) {
-        keyArr = _nsStr.split('.');
-        currentObj = _nsObject;
-
-        for(var i = 0; i < namespaceArr.length; i++) {
-          if (!currentObj[namespaceArr[i]]) {
-            return false;
-          }
-          currentObj = currentObj[namespaceArr[i]];
-        }
-
-        return currentObj;
-      };
-
-      var set = function(_nsObject, _str) {
-      };
-
-      return {
-        get: get,
-        set: set
-      };
-    };
-
-
-
-    // Returns false or Object
+    /**
+     * Gets either and object or false
+     *
+     * @method add
+     * @param {string} _nsStr Script namespace or name
+     * @param {object} _nsObject Namespace object
+     *
+     * @returns {object || boolean} functions
+     *
+     */
     var nsGet = function(_nsStr, _nsObject) {
       var keyArr = _nsStr.split('.');
       var currentObj = _nsObject;
@@ -151,120 +132,72 @@ var Yo = function() {
 
 
 
-
     /**
      * Set new branches to your namespace tree
-     * WIll run through the
+     * WIll run through the object tree creating
+     * everything that doesn't exist.
      *
      * @method add
      * @param {string} _nsStr Script namespace or name
-     * @param {array} [scriptDependencies=undefined] Script list of dependencies
+     * @param {object} _nsObject Namespace object
      *
-     * @returns {object} functions
+     * @returns {object} Section of the object param
      *
      */
     var nsSet = function(_nsStr, _nsObject) {
       var keyArr = _nsStr.split('.');
       var currentObj = _nsObject;
 
-      for(var i = 0; i < keyArr.length; i++) {
-        if (!currentObj[keyArr[i]]) {
-          currentObj[keyArr[i]] = {};
+      if (keyArr.length < 2) {
+        if(!currentObj[_nsStr]) {
+          currentObj[_nsStr] = {};
         }
-        currentObj = currentObj[keyArr[i]];
+        return currentObj[_nsStr];
+      }
+      else {
+        for(var i = 0; i < keyArr.length; i++) {
+          if (!currentObj[keyArr[i]]) {
+            currentObj[keyArr[i]] = {};
+          }
+          currentObj = currentObj[keyArr[i]];
+        }
       }
 
       return currentObj;
     };
 
 
-
-
-
-
-    var checkLoadedState = function(_script) {
-      var namespaceArr = _script.split('.');
-      var currentObj = Yo.loadedState;
-
-      for(var i = 0; i < namespaceArr.length; i++) {
-        if (!currentObj[namespaceArr[i]]) {
-          return false;
-        }
-        currentObj = currentObj[namespaceArr[i]];
-      }
-
-      return currentObj;
-    };
 
     var getLoadedState = function(_script) {
-      var namespaceArr = _script.split('.');
-      var currentObj = Yo.loadedState;
-
-      for(var i = 0; i < namespaceArr.length; i++) {
-        if (!currentObj[namespaceArr[i]]) {
-          currentObj[namespaceArr[i]] = {};
-        }
-        currentObj = currentObj[namespaceArr[i]];
-      }
-
-      return currentObj;
+      return nsGet(_script, Yo.loadedState);
     };
 
     var setLoadedState = function(_script, _data) {
-      extend(nsGet(_script, Yo.loadedState), _data);
+      extend(nsSet(_script, Yo.loadedState), _data);
     };
 
-    var getScriptRoot = function(_script) {
-      return addToNameSpace(_script);
-      //return ns[scriptRoot][_script];
-    };
-
-    var setScriptRoot = function(_script, _function) {
-      var namespaceArr = _script.split('.');
-      var currentObj = ns[scriptRoot];
-
-      if (namespaceArr.length < 2) {
-        currentObj[_script] = _function();
-      }
-      else {
-        for(var i = 0; i < namespaceArr.length; i++) {
-          if (!currentObj[namespaceArr[i]]) {
-            currentObj[namespaceArr[i]] = {};
-          }
-          currentObj = currentObj[namespaceArr[i]];
-        }
-        currentObj = _function();
+    var activateScript = function(_script) {
+      var nsLocation = nsSet(_script, ns[scriptRoot]);
+      if(getLoadedState(_script).loaded) {
+        nsLocation = getLoadedState(_script).loadedFunc();
       }
     };
 
-    var addToNameSpace = function(_str, _nsObject) {
-      var namespaceArr = _str.split('.');
-      var currentObj = _nsObject || ns[scriptRoot];
-
-      if (namespaceArr.length < 2) {
-        return currentObj[_str];
-      }
-      else {
-        for(var i = 0; i < namespaceArr.length; i++) {
-          if (!currentObj[namespaceArr[i]]) {
-            currentObj[namespaceArr[i]] = {};
-          }
-          currentObj = currentObj[namespaceArr[i]];
-        }
-      }
-
-      return currentObj;
+    var getScript = function(_script) {
+      return nsSet(_script, ns[scriptRoot]);
     };
 
-    var createOrEditLoadedState = function(data, script) {
-      script = script || scriptName;
 
-      setLoadedState(script, extend({
+
+    var createOrEditLoadedState = function(_data, _script) {
+      _script = _script || scriptName;
+
+      setLoadedState(_script, extend({
         loaded: false,
         loadedFunc: function(){},
         dependedBy: [],
         dependencies: []
-      }, nsGet(script, Yo.loadedState), data));
+      }, nsSet(_script, Yo.loadedState) || {}, _data));
     };
 
     /**
@@ -279,16 +212,8 @@ var Yo = function() {
         loadedFunc: function() { console.log(scriptName + ' called and already loaded'); }
       });
       return scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
-        return getScriptRoot(_scriptName);
+        return getScript(_scriptName);
       }));
-    };
-
-    var activateScript = function(script) {
-      //var scriptRoot = getScriptRoot(script);
-      if(getLoadedState(script).loaded) {
-        setScriptRoot(script, getLoadedState(script).loadedFunc);
-        //ns[scriptRoot][script] = getLoadedState(script).loadedFunc();
-      }
     };
 
 
@@ -322,7 +247,7 @@ var Yo = function() {
           dependencyScriptName = scriptDependents[i];
           // If script name loadState doesn't
           // exist then create one
-          if(!checkLoadedState(dependencyScriptName)) {
+          if(!nsGet(dependencyScriptName, Yo.loadedState)) {
             createOrEditLoadedState({}, dependencyScriptName);
           }
 
