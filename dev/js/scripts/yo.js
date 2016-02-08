@@ -189,8 +189,11 @@ var Yo = function() {
 
     var activateScript = function(_script) {
       var nsLocation = nsSet(_script, ns[scriptRoot], true);
+      var lastNameSpace = _script.split('.');
+      lastNameSpace = lastNameSpace[lastNameSpace.length - 1];
+
       if(getLoadedState(_script).loaded) {
-        nsLocation[_script] = getLoadedState(_script).loadedFunc();
+        nsLocation[lastNameSpace] = getLoadedState(_script).loadedFunc();
       }
     };
 
