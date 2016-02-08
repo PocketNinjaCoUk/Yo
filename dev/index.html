@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>test</title>
-  <script src="js/main.js"></script>
+  <script src="js/main-head.js"></script>
 </head>
-<body>
-<div style="display: none;">
+<body id="pageHome">
   <h1>Open up the console and get checking things damn it :-D</h1>
   <p>Once this thing starts working.  Create containers rendered to the page showing which items loaded in what order.</p>
+
+  <div id="output" style="margin: 0 0 20px 0; background: #eee; padding: 10px;">
+  </div>
 
   <h2>Should render in order within main.js</h2>
   <ol>
@@ -36,6 +38,6 @@
 
   <ul id="loadedList" class="loaded-list">
   </ul>
-</div>
+  <script src="js/main-body.js"></script>
 </body>
 </html>

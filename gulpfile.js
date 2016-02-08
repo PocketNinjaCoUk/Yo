@@ -5,7 +5,10 @@ var gulp = require('gulp');
 var include = require('gulp-include');
 
 gulp.task('scripts', function() {
-  gulp.src('./dev/js/main.js')
+  gulp.src([
+      './dev/js/main-head.js',
+      './dev/js/main-body.js'
+    ])
     .pipe(include())
       .on('error', console.log)
     .pipe(gulp.dest('./public/js'));
