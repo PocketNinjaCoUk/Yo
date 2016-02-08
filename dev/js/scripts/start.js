@@ -4,8 +4,8 @@
  * @namespace
  */
 var CompanyName = {};
-CompanyName.eggTimer = {};
 
 Yo.init({
-  namespace: CompanyName.eggTimer
+  namespace: CompanyName,
+  scriptRoot: 'myModules'
 });

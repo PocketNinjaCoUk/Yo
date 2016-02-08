@@ -8,7 +8,7 @@
  * @returns {object} public functions
  */
 var Yo = function() {
-  // namespace.loadedState.tooltip.{
+  // Yo.loadedState.tooltip.{
   //    loaded: boolean
   //    loadedFunc: function
   //    dependedBy: [string],
@@ -21,6 +21,7 @@ var Yo = function() {
    * @var {object} ns
    */
   var ns;
+  var scriptRoot = 'modules';
 
 
   /**
@@ -32,13 +33,17 @@ var Yo = function() {
    *
    * @example
    * Yo.init({
-   *   namespace: your.script.name.space
+   *   namespace: your.script.name.space,
+   *   scriptRoot: 'cheese'
    * });
    */
   var init = function(data){
-    ns = data.namespace;
-    ns.loadedState = {};
-    ns.scripts = {};
+    ns = data.namespace || Yo;
+    Yo.loadedState = {};
+    if(data.scriptRoot) {
+      scriptRoot = data.scriptRoot;
+    }
+    ns[scriptRoot] = {};
   };
 
   var isTypeOf = function(str, obj) {
@@ -50,8 +55,8 @@ var Yo = function() {
       var i, val;
       for (i = 0; i < args.length; i++) {
         val = args[i];
-        if (!isTypeOf(argSequence[i], val))   {
-          console.log('Error with value comparison: ' + val + ', EXPECTED: ' + argSequence[i] );
+        if (!isTypeOf(argSequence[i], val)) {
+          console.log('Error with value comparison: ' + val + ', EXPECTED: ' + argSequence[i]);
           return false;
         }
       }
@@ -100,14 +105,113 @@ var Yo = function() {
     var scriptCallback;
     var hasNoDependencies = true;
 
-    var createOrEditLoadedState = function(data, script) {
-      script = script || scriptName;
-      ns.loadedState[script] = extend({
+
+    /**
+     * Gets either and object or false
+     *
+     * @method add
+     * @param {string} _nsStr Script namespace or name
+     * @param {object} _nsObject Namespace object
+     *
+     * @returns {object || boolean} functions
+     *
+     */
+    var nsGet = function(_nsStr, _nsObject, _getObjectRoot) {
+      var keyArr = _nsStr.split('.');
+      var currentObj = _nsObject;
+      _getObjectRoot = _getObjectRoot || false;
+
+      for(var i = 0; i < keyArr.length; i++) {
+        if (!currentObj[keyArr[i]]) {
+          return false;
+        }
+        if(_getObjectRoot && (i === keyArr.length - 1)) {
+          return currentObj;
+        }
+        currentObj = currentObj[keyArr[i]];
+      }
+
+      return currentObj;
+    };
+
+
+
+    /**
+     * Set new branches to your namespace tree
+     * WIll run through the object tree creating
+     * everything that doesn't exist.
+     *
+     * @method add
+     * @param {string} _nsStr Script namespace or name
+     * @param {object} _nsObject Namespace object
+     *
+     * @returns {object} Section of the object param
+     *
+     */
+    var nsSet = function(_nsStr, _nsObject, _getObjectRoot) {
+      var keyArr = _nsStr.split('.');
+      var currentObj = _nsObject;
+      _getObjectRoot = _getObjectRoot || false;
+
+      if (keyArr.length < 2) {
+        if(!currentObj[_nsStr]) {
+          currentObj[_nsStr] = {};
+        }
+        if(_getObjectRoot) {
+          return _nsObject;
+        }
+        return currentObj[_nsStr];
+      }
+      else {
+        for(var i = 0; i < keyArr.length; i++) {
+          if (!currentObj[keyArr[i]]) {
+            currentObj[keyArr[i]] = {};
+          }
+          if(_getObjectRoot && (i === keyArr.length - 1)) {
+            return currentObj;
+          }
+          currentObj = currentObj[keyArr[i]];
+        }
+      }
+
+      return currentObj;
+    };
+
+
+
+    var getLoadedState = function(_script) {
+      return nsGet(_script, Yo.loadedState);
+    };
+
+    var setLoadedState = function(_script, _data) {
+      extend(nsSet(_script, Yo.loadedState), _data);
+    };
+
+    var activateScript = function(_script) {
+      var nsLocation = nsSet(_script, ns[scriptRoot], true);
+      var lastNameSpace = _script.split('.');
+      lastNameSpace = lastNameSpace[lastNameSpace.length - 1];
+
+      if(getLoadedState(_script).loaded) {
+        nsLocation[lastNameSpace] = getLoadedState(_script).loadedFunc();
+      }
+    };
+
+    var getScript = function(_script) {
+      return nsSet(_script, ns[scriptRoot]);
+    };
+
+
+
+    var createOrEditLoadedState = function(_data, _script) {
+      _script = _script || scriptName;
+
+      setLoadedState(_script, extend({
         loaded: false,
         loadedFunc: function(){},
         dependedBy: [],
         dependencies: []
-      }, ns.loadedState[script], data);
+      }, nsSet(_script, Yo.loadedState) || {}, _data));
     };
 
     /**
@@ -122,31 +226,25 @@ var Yo = function() {
         loadedFunc: function() { console.log(scriptName + ' called and already loaded'); }
       });
       return scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
-        return ns.scripts[_scriptName];
+        return getScript(_scriptName);
       }));
-    };
-
-    var activateScript = function(script) {
-      if(ns.loadedState[script].loaded) {
-        ns.scripts[script] = ns.loadedState[script].loadedFunc();
-      }
     };
 
 
     var checkDependedBy = function() {
-      var dependedBy = ns.loadedState[scriptName].dependedBy;
+      var dependedBy = getLoadedState(scriptName).dependedBy;
 
       dependedBy.forEach(function(otherScript) {
         for(var i = 0; i < dependedBy.length; i++) {
-          if (ns.loadedState[otherScript].dependencies[i] === scriptName) {
-            ns.loadedState[otherScript].dependencies.splice(i, 1);
+          if (getLoadedState(otherScript).dependencies[i] === scriptName) {
+            getLoadedState(otherScript).dependencies.splice(i, 1);
             dependedBy.splice(i, 1);
             break;
           }
         }
 
-        if (ns.loadedState[otherScript].dependencies.length < 1) {
-          ns.loadedState[otherScript].loaded = true;
+        if (getLoadedState(otherScript).dependencies.length < 1) {
+          getLoadedState(otherScript).loaded = true;
           activateScript(otherScript);
         }
       });
@@ -155,7 +253,7 @@ var Yo = function() {
 
     var checkDependencies = function() {
       var allDependenciesLoaded = true;
-      var scriptDependents = ns.loadedState[scriptName].dependencies;
+      var scriptDependents = getLoadedState(scriptName).dependencies;
       var dependencyScriptName;
 
       var looper = function() {
@@ -163,12 +261,12 @@ var Yo = function() {
           dependencyScriptName = scriptDependents[i];
           // If script name loadState doesn't
           // exist then create one
-          if(!ns.loadedState[dependencyScriptName]) {
+          if(!nsGet(dependencyScriptName, Yo.loadedState)) {
             createOrEditLoadedState({}, dependencyScriptName);
           }
 
-          if(!ns.loadedState[dependencyScriptName].loaded) {
-            ns.loadedState[dependencyScriptName].dependedBy.push(scriptName);
+          if(!getLoadedState(dependencyScriptName).loaded) {
+            getLoadedState(dependencyScriptName).dependedBy.push(scriptName);
             allDependenciesLoaded = false;
           }
           else {
@@ -182,7 +280,7 @@ var Yo = function() {
       looper();
 
       if(allDependenciesLoaded) {
-        ns.loadedState[scriptName].loaded = true;
+        getLoadedState(scriptName).loaded = true;
       }
     };
 
