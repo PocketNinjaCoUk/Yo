@@ -74,14 +74,13 @@ Well forget you and forget that! :-P
   CompanyName.whatever = {};
 
   Yo.init({
+    // defaults to Yo if not set.
     namespace: CompanyName.whatever,
+    // defaults to 'module' if not set.  For example
     scriptRoot: 'scriptiesHere'
   });
 ```
 
-**namespace**: defaults to Yo if not set.
-
-**scriptRoot**: defaults to 'module' if not set.  For example
 
 ```javascript
   var CompanyName = {};
