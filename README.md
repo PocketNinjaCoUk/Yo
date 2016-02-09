@@ -79,8 +79,9 @@ Well forget you and forget that! :-P
   });
 ```
 
-namespace: defaults to Yo if not set.
-scriptRoot: defaults to 'module' if not set.  For example
+**namespace**: defaults to Yo if not set.
+
+**scriptRoot**: defaults to 'module' if not set.  For example
 
 ```javascript
   var CompanyName = {};
@@ -106,7 +107,7 @@ scriptRoot: defaults to 'module' if not set.  For example
 #### For new scripts
 
 ```javascript
-  Yo.add('Lister', [], function() {
+  Yo.add('Lister', ['dependencyScript'], function(depScript) {
   });
 ```
 
@@ -128,6 +129,7 @@ Or with namespaces
       output: output
     };
   });
+
   Yo.add('Utilities',['widgets.some.overly.long.namespace.branch.Lister'], function(lister) {
     lister.output('eyeamaman');
     return {};
