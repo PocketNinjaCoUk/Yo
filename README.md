@@ -74,9 +74,34 @@ Well forget you and forget that! :-P
   CompanyName.whatever = {};
 
   Yo.init({
-    namespace: CompanyName.whatever
+    namespace: CompanyName.whatever,
+    scriptRoot: 'scriptiesHere'
   });
 ```
+
+namespace: defaults to Yo if not set.
+scriptRoot: defaults to 'module' if not set.  For example
+
+```javascript
+  var CompanyName = {};
+  CompanyName.whatever = {};
+
+  Yo.init({
+    namespace: CompanyName.whatever,
+  });
+  
+  // CompanyName.whatever.module
+  
+  Yo.init({
+    namespace: CompanyName.whatever,
+    scriptRoot: 'scriptiesHere'
+  });
+  
+  // CompanyName.whatever.scriptiesHere
+```
+
+
+
 
 #### For new scripts
 
@@ -89,6 +114,23 @@ Or
 
 ```javascript
   Yo.add('Lister', function() {
+  });
+```
+
+Or with namespaces
+
+```javascript
+  Yo.add('widgets.some.overly.long.namespace.branch.Lister', function() {
+    var output = function(_name) {
+      console.log('Hello lister from ' + _name);
+    }
+    return {
+      output: output
+    };
+  });
+  Yo.add('Utilities',['widgets.some.overly.long.namespace.branch.Lister'], function(lister) {
+    lister.output('eyeamaman');
+    return {};
   });
 ```
 
