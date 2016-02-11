@@ -43,7 +43,7 @@ var Yo = function() {
     if(data.scriptRoot) {
       scriptRoot = data.scriptRoot;
     }
-    ns[scriptRoot] = {};
+    ns[scriptRoot] = ns[scriptRoot] || {};
   };
 
   var isTypeOf = function(str, obj) {
