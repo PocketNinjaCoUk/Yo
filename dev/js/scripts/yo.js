@@ -194,7 +194,7 @@ var Yo = function() {
 
       if(getLoadedState(_script).loaded) {
         nsLocation[lastNameSpace] = getLoadedState(_script).loadedFunc();
-        getLoadedState(_script).runCheckDependedBy();
+        getLoadedState(_script).runAfterActivation();
       }
     };
 
@@ -210,7 +210,7 @@ var Yo = function() {
       setLoadedState(_script, extend({
         loaded: false,
         loadedFunc: function(){},
-        runCheckDependedBy: function(){},
+        runAfterActivation: function(){},
         dependedBy: [],
         dependencies: []
       }, nsSet(_script, Yo.loadedState) || {}, _data));
@@ -317,7 +317,7 @@ var Yo = function() {
       createOrEditLoadedState({
         loadedFunc: pushFunction,
         dependencies: arrayClone(scriptDependencies),
-        runCheckDependedBy: function() {
+        runAfterActivation: function() {
           checkDependedBy();
         }
       });
