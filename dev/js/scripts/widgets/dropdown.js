@@ -7,9 +7,10 @@
  * @param {object} utils - module dependency
  * @returns {object} public functions
  */
-Yo.add('widgets.Dropdown', ['test', 'utilities'], function(test, utils) {
+Yo.add('Dropdown', ['test', 'utilities'], function(test, utils) {
   console.log('Widget: Dropdown active');
   test.output(' from dropdown');
+  console.log(utils.add10(100));
 
   /**
    * dropdown test function
