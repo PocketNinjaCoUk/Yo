@@ -1,7 +1,6 @@
-Yo.add('widgets.SomeWidget', ['utils.all'], function(utils) {
-
-  console.log(utils.hello('Duncan'));
-  console.log(utils.chicken('potatoes'));
+Yo.add('widgets.SomeWidget', ['utils.all'], function(utilsAll) {
+  console.log(utilsAll.hello('Duncan'));
+  console.log(utilsAll.chicken('potatoes'));
 
   return {
   }
