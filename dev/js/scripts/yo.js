@@ -239,10 +239,12 @@ var Yo = function() {
 
       dependedBy.forEach(function(otherScript) {
         for(var i = 0; i < dependedBy.length; i++) {
-          if (getLoadedState(otherScript).dependencies[i] === scriptName) {
-            getLoadedState(otherScript).dependencies.splice(i, 1);
-            dependedBy.splice(i, 1);
-            break;
+          for(var a = 0; a < getLoadedState(otherScript).dependencies.length; a++) {
+            if (getLoadedState(otherScript).dependencies[a] === scriptName) {
+              getLoadedState(otherScript).dependencies.splice(a, 1);
+              dependedBy.splice(i, 1);
+              break;
+            }
           }
         }
 

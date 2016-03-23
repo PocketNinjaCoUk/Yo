@@ -1,6 +1,7 @@
-Yo.add('utils.All', ['utils.hello', 'utils.chicken'], function(hello, chicken) {
+Yo.add('utils.All', ['utils.hello', 'utils.chicken', 'utils.cheese'], function(hello, chicken, cheese) {
   return {
     hello: hello,
-    chicken: chicken
+    chicken: chicken,
+    cheese: cheese
   }
 });
