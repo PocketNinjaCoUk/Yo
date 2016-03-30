@@ -83,6 +83,80 @@ var Yo = function() {
     return arguments[0];
   };
 
+  /**
+   * Gets either and object or false
+   *
+   * @method add
+   * @param {string} _nsStr Script namespace or name
+   * @param {object} _nsObject Namespace object
+   * @param {boolean} _getObjectRoot What does this mean !!!?
+   *
+   * @returns {object || boolean} functions
+   *
+   */
+  var nsGet = function(_nsStr, _nsObject, _getObjectRoot) {
+    var keyArr = _nsStr.split('.');
+    var currentObj = _nsObject;
+    _getObjectRoot = _getObjectRoot || false;
+
+    for(var i = 0; i < keyArr.length; i++) {
+      if (!currentObj[keyArr[i]]) {
+        return false;
+      }
+      if(_getObjectRoot && (i === keyArr.length - 1)) {
+        return currentObj;
+      }
+      currentObj = currentObj[keyArr[i]];
+    }
+
+    return currentObj;
+  };
+
+
+
+  /**
+   * Set new branches to your namespace tree
+   * WIll run through the object tree creating
+   * everything that doesn't exist.
+   *
+   * @method add
+   * @param {string} _nsStr Script namespace or name
+   * @param {object} _nsObject Namespace object
+   * @param {boolean} _getObjectRoot What does this mean, find out?!?!?
+   *
+   * @returns {object} Section of the object param
+   *
+   */
+  var nsSet = function(_nsStr, _nsObject, _getObjectRoot) {
+    var keyArr = _nsStr.split('.');
+    var currentObj = _nsObject;
+    _getObjectRoot = _getObjectRoot || false;
+
+    if (keyArr.length < 2) {
+      if(!currentObj[_nsStr]) {
+        currentObj[_nsStr] = {};
+      }
+      if(_getObjectRoot) {
+        return _nsObject;
+      }
+      return currentObj[_nsStr];
+    }
+    else {
+      for(var i = 0; i < keyArr.length; i++) {
+        if (!currentObj[keyArr[i]]) {
+          currentObj[keyArr[i]] = {};
+        }
+        if(_getObjectRoot && (i === keyArr.length - 1)) {
+          return currentObj;
+        }
+        currentObj = currentObj[keyArr[i]];
+      }
+    }
+
+    return currentObj;
+  };
+
+
 
   /**
    * For adding new scripts with their own dependencies
@@ -104,80 +178,6 @@ var Yo = function() {
     var scriptDependencies = [];
     var scriptCallback;
     var hasNoDependencies = true;
-
-
-    /**
-     * Gets either and object or false
-     *
-     * @method add
-     * @param {string} _nsStr Script namespace or name
-     * @param {object} _nsObject Namespace object
-     *
-     * @returns {object || boolean} functions
-     *
-     */
-    var nsGet = function(_nsStr, _nsObject, _getObjectRoot) {
-      var keyArr = _nsStr.split('.');
-      var currentObj = _nsObject;
-      _getObjectRoot = _getObjectRoot || false;
-
-      for(var i = 0; i < keyArr.length; i++) {
-        if (!currentObj[keyArr[i]]) {
-          return false;
-        }
-        if(_getObjectRoot && (i === keyArr.length - 1)) {
-          return currentObj;
-        }
-        currentObj = currentObj[keyArr[i]];
-      }
-
-      return currentObj;
-    };
-
-
-
-    /**
-     * Set new branches to your namespace tree
-     * WIll run through the object tree creating
-     * everything that doesn't exist.
-     *
-     * @method add
-     * @param {string} _nsStr Script namespace or name
-     * @param {object} _nsObject Namespace object
-     *
-     * @returns {object} Section of the object param
-     *
-     */
-    var nsSet = function(_nsStr, _nsObject, _getObjectRoot) {
-      var keyArr = _nsStr.split('.');
-      var currentObj = _nsObject;
-      _getObjectRoot = _getObjectRoot || false;
-
-      if (keyArr.length < 2) {
-        if(!currentObj[_nsStr]) {
-          currentObj[_nsStr] = {};
-        }
-        if(_getObjectRoot) {
-          return _nsObject;
-        }
-        return currentObj[_nsStr];
-      }
-      else {
-        for(var i = 0; i < keyArr.length; i++) {
-          if (!currentObj[keyArr[i]]) {
-            currentObj[keyArr[i]] = {};
-          }
-          if(_getObjectRoot && (i === keyArr.length - 1)) {
-            return currentObj;
-          }
-          currentObj = currentObj[keyArr[i]];
-        }
-      }
-
-      return currentObj;
-    };
-
-
 
     var getLoadedState = function(_script) {
       return nsGet(_script, Yo.loadedState);
@@ -305,7 +305,7 @@ var Yo = function() {
       return false;
     }
 
-    console.log('YO.ADD: ' + scriptName);
+    //console.log('YO.ADD: ' + scriptName);
 
     if (hasNoDependencies) {
       createOrEditLoadedState({
