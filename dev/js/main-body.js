@@ -1,7 +1,9 @@
 
 // TEST EMPTY WIDGETS
-//= require scripts/widgets/test.js
-//= require scripts/widgets/egg.js
-//= require scripts/widgets/tooltip.js
-//= require scripts/widgets/dropdown.js
-//= require scripts/widgets/utilities.js
+//= require scripts/widgets/someWidget.js
+
+//= require scripts/utils/all.js
+
+//= require scripts/utils/chicken.js
+//= require scripts/utils/hello.js
+//= require scripts/utils/cheese.js
