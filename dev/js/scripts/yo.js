@@ -8,6 +8,8 @@
  * @returns {object} public functions
  */
 var Yo = function() {
+  "use strict";
+
   // Yo.loadedState.tooltip.{
   //    loaded: boolean
   //    loadedFunc: function
@@ -50,6 +52,19 @@ var Yo = function() {
     return '[object ' + str + ']' === Object.prototype.toString.call(obj);
   };
 
+  /**
+   * Arguments checker
+   *
+   * Take an array of arguments and compare it's type with an array sequence of
+   * strings type values.
+   *
+   * @method argumentChecker
+   * @param {array} args List of arguments
+   * @param {array} argSequence List of String argument types
+   *
+   * @returns {object || boolean} functions
+   *
+   */
   var argumentChecker = function(args, argSequence) {
     if(args.length === argSequence.length) {
       var i, val;
@@ -86,7 +101,7 @@ var Yo = function() {
   /**
    * Gets either and object or false
    *
-   * @method add
+   * @method nsGet
    * @param {string} _nsStr Script namespace or name
    * @param {object} _nsObject Namespace object
    * @param {boolean} _getObjectRoot What does this mean !!!?
@@ -119,7 +134,7 @@ var Yo = function() {
    * WIll run through the object tree creating
    * everything that doesn't exist.
    *
-   * @method add
+   * @method nsSet
    * @param {string} _nsStr Script namespace or name
    * @param {object} _nsObject Namespace object
    * @param {boolean} _getObjectRoot What does this mean, find out?!?!?
@@ -201,8 +216,6 @@ var Yo = function() {
     var getScript = function(_script) {
       return nsSet(_script, ns[scriptRoot]);
     };
-
-
 
     var createOrEditLoadedState = function(_data, _script) {
       _script = _script || scriptName;
@@ -305,7 +318,7 @@ var Yo = function() {
       return false;
     }
 
-    //console.log('YO.ADD: ' + scriptName);
+    console.log('YO.ADD: ' + scriptName);
 
     if (hasNoDependencies) {
       createOrEditLoadedState({
