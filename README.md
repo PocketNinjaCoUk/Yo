@@ -12,6 +12,7 @@ Download the repo and run
 
 ```
 $ npm install
+$ npm install gulp -g
 ```
 
 The main gulp command is to simply run
