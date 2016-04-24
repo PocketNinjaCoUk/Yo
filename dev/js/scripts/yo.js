@@ -209,7 +209,13 @@ var Yo = function() {
 
       if(getLoadedState(_script).loaded) {
         nsLocation[lastNameSpace] = getLoadedState(_script).loadedFunc();
+
+        // The next few lines run after the script function has run
         getLoadedState(_script).runAfterActivation();
+        console.log(_script + ': activate now');
+        return nsLocation[lastNameSpace];
+        //return def.promise();
+        //return nsLocation[lastNameSpace];
       }
     };
 
@@ -341,9 +347,40 @@ var Yo = function() {
     }
   };
 
+  var directive = function(_obj) {
+    var def = $.Deferred();
+
+    // run code to create new module
+    $.when(add.apply(this, _obj.args)).done(function(egg) {
+
+      var scriptName = _obj.args[0];
+
+      console.log('Hello World');
+      console.log('egg', egg);
+
+
+      $.fn[scriptName + '_maker'] = function() {
+        console.log('maker for ' + scriptName);
+      };
+
+      $.fn[scriptName] = function() {
+        console.log('direct jquery function for ' + scriptName);
+        console.log($(this).html());
+      };
+    });
+
+    def.resolve(function() {
+      return add.apply(this, _obj.args);
+    });
+
+
+    // take returned function and generate the maker and jquery functions
+  };
+
   return {
     init: init,
     add: add,
+    directive: directive,
     isTypeOf: isTypeOf,
     argumentChecker: argumentChecker,
     arrayClone: arrayClone,
