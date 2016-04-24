@@ -213,7 +213,7 @@ var Yo = function() {
         // The next few lines run after the script function has run
         getLoadedState(_script).runAfterActivation();
         console.log(_script + ': activate now');
-        return nsLocation[lastNameSpace];
+        return 'Chickens';
         //return def.promise();
         //return nsLocation[lastNameSpace];
       }
@@ -351,7 +351,7 @@ var Yo = function() {
     var def = $.Deferred();
 
     // run code to create new module
-    $.when(add.apply(this, _obj.args)).done(function(egg) {
+    $.when(def).done(function(egg) {
 
       var scriptName = _obj.args[0];
 
@@ -369,9 +369,11 @@ var Yo = function() {
       };
     });
 
-    def.resolve(function() {
-      return add.apply(this, _obj.args);
-    });
+    //def.resolve(add.apply(this, _obj.args));
+
+
+    console.log('LOOKING FOR CHICKENS');
+    console.log('chickens?', add.apply(this, _obj.args));
 
 
     // take returned function and generate the maker and jquery functions
