@@ -8,7 +8,5 @@
 //= /require scripts/utils/hello.js
 //= /require scripts/utils/cheese.js
 
-//= /require scripts/widgets/directiveTest.js
-//= /require scripts/widgets/Something.js
-
-
+//= require scripts/widgets/directiveTest.js
+//= require scripts/widgets/Something.js

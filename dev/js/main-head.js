@@ -12,7 +12,7 @@
 //= #require scripts/yowAdd.js
 //= #require scripts/yowDirective.js
 
-//= require scripts/thingy.js
+//= #require scripts/thingy.js
 
 
 //= #require scripts/testScript.js

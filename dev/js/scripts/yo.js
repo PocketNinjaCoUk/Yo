@@ -48,6 +48,10 @@ var Yo = function() {
     ns[scriptRoot] = ns[scriptRoot] || {};
   };
 
+  var argsToArray = function(){
+    return Array.prototype.slice.call(arguments);
+  };
+
   var isTypeOf = function(str, obj) {
     return '[object ' + str + ']' === Object.prototype.toString.call(obj);
   };
@@ -187,7 +191,7 @@ var Yo = function() {
    *   return {}
    * });
    */
-  var add = function() {
+  var makeModule = function() {
 
     var scriptName;
     var scriptDependencies = [];
@@ -309,13 +313,13 @@ var Yo = function() {
     };
 
 
-    if(argumentChecker(arguments, ['String', 'Array', 'Function'])) {
+    if(argumentChecker(arguments, ['String', 'Array', 'Function', 'Object'])) {
       scriptName = arguments[0].toLowerCase();
       scriptDependencies = arguments[1];
       scriptCallback = arguments[2];
       hasNoDependencies = scriptDependencies.length < 1;
     }
-    else if(argumentChecker(arguments, ['String', 'Function'])) {
+    else if(argumentChecker(arguments, ['String', 'Function', 'Object'])) {
       scriptName = arguments[0].toLowerCase();
       scriptCallback = arguments[1];
     }
@@ -347,42 +351,27 @@ var Yo = function() {
     }
   };
 
-  var directive = function(_obj) {
-    var def = $.Deferred();
-
-    // run code to create new module
-    $.when(def).done(function(egg) {
-
-      var scriptName = _obj.args[0];
-
-      console.log('Hello World');
-      console.log('egg', egg);
-
-
-      $.fn[scriptName + '_maker'] = function() {
-        console.log('maker for ' + scriptName);
-      };
-
-      $.fn[scriptName] = function() {
-        console.log('direct jquery function for ' + scriptName);
-        console.log($(this).html());
-      };
+  var add = function() {
+    var arr = argsToArray.apply(undefined, arguments);
+    arr.push({
+      type: 'add'
     });
+    return makeModule.apply(undefined, arr);
+  };
 
-    //def.resolve(add.apply(this, _obj.args));
-
-
-    console.log('LOOKING FOR CHICKENS');
-    console.log('chickens?', add.apply(this, _obj.args));
-
-
-    // take returned function and generate the maker and jquery functions
+  var directive = function(_obj) {
+    var arr = _obj[1].args;
+    arr.push(extend({}, _obj[0], {
+      type: 'directive'
+    }));
+    return makeModule.apply(undefined, arr);
   };
 
   return {
     init: init,
     add: add,
     directive: directive,
+    argsToArray: argsToArray,
     isTypeOf: isTypeOf,
     argumentChecker: argumentChecker,
     arrayClone: arrayClone,
