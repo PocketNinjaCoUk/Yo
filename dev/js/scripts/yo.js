@@ -196,6 +196,8 @@ var Yo = function() {
     var scriptName;
     var scriptDependencies = [];
     var scriptCallback;
+    var moduleData = {};
+    var args = arguments;
     var hasNoDependencies = true;
 
     var getLoadedState = function(_script) {
@@ -313,22 +315,24 @@ var Yo = function() {
     };
 
 
-    if(argumentChecker(arguments, ['String', 'Array', 'Function', 'Object'])) {
-      scriptName = arguments[0].toLowerCase();
-      scriptDependencies = arguments[1];
-      scriptCallback = arguments[2];
+    if(argumentChecker(args, ['String', 'Array', 'Function', 'Object'])) {
+      scriptName = args[0].toLowerCase();
+      scriptDependencies = args[1];
+      scriptCallback = args[2];
+      moduleData = extend(moduleData, args[3]);
       hasNoDependencies = scriptDependencies.length < 1;
     }
-    else if(argumentChecker(arguments, ['String', 'Function', 'Object'])) {
-      scriptName = arguments[0].toLowerCase();
-      scriptCallback = arguments[1];
+    else if(argumentChecker(args, ['String', 'Function', 'Object'])) {
+      scriptName = args[0].toLowerCase();
+      scriptCallback = args[1];
+      moduleData = extend(moduleData, args[2]);
     }
     else {
-      console.log('incorrect params added', arguments);
+      console.log('incorrect params added', args);
       return false;
     }
 
-    console.log('YO.ADD: ' + scriptName);
+    console.log('YO.' + moduleData.type + ': ' + scriptName);
 
     if (hasNoDependencies) {
       createOrEditLoadedState({
