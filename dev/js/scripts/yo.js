@@ -103,7 +103,7 @@ var Yo = function() {
   };
 
   /**
-   * Gets either and object or false
+   * Gets either an object or false
    *
    * @method nsGet
    * @param {string} _nsStr Script namespace or name
@@ -177,6 +177,16 @@ var Yo = function() {
 
 
 
+
+
+  var getLoadedState = function(_script) {
+    return nsGet(_script, Yo.loadedState);
+  };
+
+  var setLoadedState = function(_script, _data) {
+    extend(nsSet(_script, Yo.loadedState), _data);
+  };
+
   /**
    * For adding new scripts with their own dependencies
    *
@@ -193,6 +203,17 @@ var Yo = function() {
    */
   var makeModule = function() {
 
+    // This object can be sent around
+    // the various functions instead
+    // of sending lots of params.
+    var options = {
+      scriptName: '',
+      scriptDependencies: [],
+      scriptCallback: undefined,
+      moduleData: {},
+      hasNoDependencies: true
+    };
+
     var scriptName;
     var scriptDependencies = [];
     var scriptCallback;
@@ -200,14 +221,7 @@ var Yo = function() {
     var args = arguments;
     var hasNoDependencies = true;
 
-    var getLoadedState = function(_script) {
-      return nsGet(_script, Yo.loadedState);
-    };
-
-    var setLoadedState = function(_script, _data) {
-      extend(nsSet(_script, Yo.loadedState), _data);
-    };
-
+    // can be moved out
     var activateScript = function(_script) {
       var nsLocation = nsSet(_script, ns[scriptRoot], true);
       var lastNameSpace = _script.split('.');
@@ -218,17 +232,15 @@ var Yo = function() {
 
         // The next few lines run after the script function has run
         getLoadedState(_script).runAfterActivation();
-        console.log(_script + ': activate now');
-        return 'Chickens';
-        //return def.promise();
-        //return nsLocation[lastNameSpace];
       }
     };
 
+    // can be moved out
     var getScript = function(_script) {
       return nsSet(_script, ns[scriptRoot]);
     };
 
+    // can be moved out with changes
     var createOrEditLoadedState = function(_data, _script) {
       _script = _script || scriptName;
 
@@ -247,6 +259,7 @@ var Yo = function() {
      * @function pushFunction
      * @private
      */
+    // can be moved out with changes
     var pushFunction = function() {
       createOrEditLoadedState({
         loaded: true,
