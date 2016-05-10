@@ -384,6 +384,12 @@ var Yo = function() {
     return makeModule.apply(undefined, arr);
   };
 
+  var injector = function() {
+    // Insert oneself into dependent scripts injector array
+    // or run the script straight away
+    //return makeModule.apply(undefined, arr);
+  };
+
   return {
     init: init,
     add: add,
