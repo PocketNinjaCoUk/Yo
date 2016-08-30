@@ -43,8 +43,8 @@ var Yo = function() {
    * After creating Yo you need to provide it with your main namespace to any level within it. Like "company" or "company.cool.scripts"
    *
    * @method init
-   * @param {Object} data - initial data object
-   * @param {Object} data.namespace - users main script namespace
+   * @param {Object} data - initial organisation data object
+   * @param {String} data.namespace - where all of your scripts go in the organisation data object
    * @param {Boolean} data.debugMode - for outputting scripts and connection when they happen
    * @param {Array} data.debugScripts - choose which scripts you want to output data on
    *
