@@ -43,15 +43,17 @@ var Yo = function() {
    * After creating Yo you need to provide it with your main namespace to any level within it. Like "company" or "company.cool.scripts"
    *
    * @method init
-   * @param {object} data - initial data object
-   * @param {object} data.namespace - users main script namespace
-   * @param {boolean} data.debugMode - for outputting scripts and connection when they happen
+   * @param {Object} data - initial data object
+   * @param {Object} data.namespace - users main script namespace
+   * @param {Boolean} data.debugMode - for outputting scripts and connection when they happen
+   * @param {Array} data.debugScripts - choose which scripts you want to output data on
    *
    * @example
    * Yo.init({
    *   namespace: your.script.name.space,
    *   scriptRoot: 'cheese'
-   *   debugMode: true
+   *   debugMode: true,
+   *   debugScripts: ['scriptOne', 'scriptTwo']
    * });
    */
   var init = function(data){
@@ -62,11 +64,23 @@ var Yo = function() {
     }
     ns[scriptRoot] = ns[scriptRoot] || {};
     ns.debugMode = data.debugMode || false;
+    ns.debugScripts = data.debugScripts || undefined;
   };
 
   var log = function(str) {
     if(ns.debugMode) {
-      console.log(str);
+      if(ns.debugScripts === undefined || isTypeOf('Array', ns.debugScripts) && ns.debugScripts.length < 1) {
+        // undefined or empty debugScripts array means ALL scripts
+        console.log(str);
+      }
+      else if(isTypeOf('Array', ns.debugScripts) && ns.debugScripts.length > 0) {
+        // Array means display all script logs within the array
+        ns.debugScripts.forEach(function(scriptItem) {
+          if(str.search(scriptItem) > -1) {
+            console.log(str);
+          }
+        });
+      }
     }
   };
 
@@ -81,8 +95,8 @@ var Yo = function() {
    * strings type values.
    *
    * @method argumentChecker
-   * @param {array} args List of arguments
-   * @param {array} argSequence List of String argument types
+   * @param {Array} args List of arguments
+   * @param {Array} argSequence List of String argument types
    *
    * @returns {object || boolean} functions
    *
@@ -200,7 +214,7 @@ var Yo = function() {
    *
    * @method add
    * @param {string} scriptName Script name
-   * @param {array} [scriptDependencies=undefined] Script list of dependencies
+   * @param {Array} [scriptDependencies=undefined] Script list of dependencies
    * @param {function} scriptCallback Script module callback
    *
    * @example
@@ -285,7 +299,7 @@ var Yo = function() {
             if (getLoadedState(otherScript).dependencies[a] === scriptName) {
               getLoadedState(otherScript).dependencies.splice(a, 1);
               dependedBy.splice(i, 1);
-              log(scriptName + ' found dependency by ' + otherScript);
+              log('DEPENDENCY: ' + scriptName + ' depended on by ' + otherScript);
               break;
             }
           }
