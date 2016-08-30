@@ -1,8 +1,7 @@
 
 var gulp = require('gulp');
-
-// https://www.npmjs.com/package/gulp-include
 var include = require('gulp-include');
+var minify = require('gulp-minify');
 
 gulp.task('scripts', function() {
   gulp.src([
@@ -17,6 +16,19 @@ gulp.task('scripts', function() {
 gulp.task('copy-html', function() {
   gulp.src('./dev/**.html')
     .pipe(gulp.dest('./public'));
+});
+
+gulp.task('compress', function() {
+  gulp.src('./dev/js/scripts/yo.js')
+    .pipe(minify({
+      ext:{
+        src:'.js',
+        min:'.min.js'
+      },
+      exclude: ['tasks'],
+      ignoreFiles: ['.combo.js', '-min.js']
+    }))
+    .pipe(gulp.dest('./dev/'))
 });
 
 gulp.task('default', ['scripts', 'copy-html']);
