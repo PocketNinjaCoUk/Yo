@@ -7,7 +7,8 @@
 var CompanyName = {};
 
 Yo.init({
-  namespace: CompanyName,
-  scriptRoot: 'myModules',
-  debugMode: true
+  namespace: CompanyName
+  ,scriptRoot: 'myModules'
+  //,debugMode: true
+  //,debugScripts: ['your', 'fine', 'scripts', 'here']
 });
