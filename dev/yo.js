@@ -98,7 +98,7 @@ var Yo = function() {
    * @param {Array} args List of arguments
    * @param {Array} argSequence List of String argument types
    *
-   * @returns {object || boolean} functions
+   * @returns {boolean} based on the arguments list being correct
    *
    */
   var argumentChecker = function(args, argSequence) {
@@ -142,7 +142,8 @@ var Yo = function() {
    * @param {object} _nsObject Namespace object
    * @param {boolean} _getObjectRoot What does this mean !!!?
    *
-   * @returns {object || boolean} functions
+   * @returns {Boolean} if the object namespace does'nt exist
+   * @returns {Object} of the namespace requested
    *
    */
   var nsGet = function(_nsStr, _nsObject, _getObjectRoot) {
