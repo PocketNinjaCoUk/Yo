@@ -25,18 +25,33 @@ var Yo = function() {
   var ns;
   var scriptRoot = 'modules';
 
+  /**
+   * Counter for items added for debugging output
+   * @private
+   * @var {number} totalScriptsAdded
+   */
+  var totalScriptsAdded = 0;
+
+  /**
+   * Counter for items loaded for debugging output
+   * @private
+   * @var {number} totalScriptsLoaded
+   */
+  var totalScriptsLoaded = 0;
 
   /**
    * After creating Yo you need to provide it with your main namespace to any level within it. Like "company" or "company.cool.scripts"
    *
    * @method init
-   * @param {object} data - initial data object.
-   * @param {object} data.namespace - users main script namespace.
+   * @param {object} data - initial data object
+   * @param {object} data.namespace - users main script namespace
+   * @param {boolean} data.debugMode - for outputting scripts and connection when they happen
    *
    * @example
    * Yo.init({
    *   namespace: your.script.name.space,
    *   scriptRoot: 'cheese'
+   *   debugMode: true
    * });
    */
   var init = function(data){
@@ -46,6 +61,13 @@ var Yo = function() {
       scriptRoot = data.scriptRoot;
     }
     ns[scriptRoot] = ns[scriptRoot] || {};
+    ns.debugMode = data.debugMode || false;
+  };
+
+  var log = function(str) {
+    if(ns.debugMode) {
+      console.log(str);
+    }
   };
 
   var isTypeOf = function(str, obj) {
@@ -71,7 +93,7 @@ var Yo = function() {
       for (i = 0; i < args.length; i++) {
         val = args[i];
         if (!isTypeOf(argSequence[i], val)) {
-          console.log('Error with value comparison: ' + val + ', EXPECTED: ' + argSequence[i]);
+          log('Error with value comparison: ' + val + ', EXPECTED: ' + argSequence[i]);
           return false;
         }
       }
@@ -210,6 +232,11 @@ var Yo = function() {
       if(getLoadedState(_script).loaded) {
         nsLocation[lastNameSpace] = getLoadedState(_script).loadedFunc();
         getLoadedState(_script).runAfterActivation();
+
+        // Debugging reasons
+        totalScriptsLoaded += 1;
+        log('YO.LOADED: ' + _script);
+        log('scripts ADDED: ' + totalScriptsAdded + ', LOADED: ' + totalScriptsLoaded);
       }
     };
 
@@ -238,7 +265,9 @@ var Yo = function() {
     var pushFunction = function() {
       createOrEditLoadedState({
         loaded: true,
-        loadedFunc: function() { console.log(scriptName + ' called and already loaded'); }
+        loadedFunc: function() {
+          log(scriptName + ' called and already loaded');
+        }
       });
 
       return scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
@@ -256,6 +285,7 @@ var Yo = function() {
             if (getLoadedState(otherScript).dependencies[a] === scriptName) {
               getLoadedState(otherScript).dependencies.splice(a, 1);
               dependedBy.splice(i, 1);
+              log(scriptName + ' found dependency by ' + otherScript);
               break;
             }
           }
@@ -314,11 +344,12 @@ var Yo = function() {
       scriptCallback = arguments[1];
     }
     else {
-      console.log('incorrect params added', arguments);
+      log('incorrect params added', arguments);
       return false;
     }
 
-    console.log('YO.ADD: ' + scriptName);
+    log('YO.ADD: ' + scriptName);
+    totalScriptsAdded += 1;
 
     if (hasNoDependencies) {
       createOrEditLoadedState({
