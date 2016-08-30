@@ -78,7 +78,11 @@ Well forget you and forget that! :-P
     // defaults to Yo if not set.
     namespace: CompanyName.whatever,
     // defaults to 'module' if not set.  For example
-    scriptRoot: 'scriptiesHere'
+    scriptRoot: 'scriptiesHere',
+    // For outputting scripts Added, Loaded and dependency Connections
+    debugMode: true,
+    // For outputing only logs by the scripts / keywords listed, case sensitive
+    debugScripts: ['scriptX', 'scriptY']
   });
 ```
 
