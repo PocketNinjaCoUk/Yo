@@ -177,8 +177,6 @@ var Yo = function() {
 
 
 
-
-
   var getLoadedState = function(_script) {
     return nsGet(_script, Yo.loadedState);
   };
@@ -227,6 +225,9 @@ var Yo = function() {
       var lastNameSpace = _script.split('.');
       lastNameSpace = lastNameSpace[lastNameSpace.length - 1];
 
+      // Check if the script has loaded and then:
+      // -- Activate it
+      // -- Run it's runAfterActivation function
       if(getLoadedState(_script).loaded) {
         nsLocation[lastNameSpace] = getLoadedState(_script).loadedFunc();
 
@@ -378,9 +379,17 @@ var Yo = function() {
 
   var directive = function(_obj) {
     var arr = _obj[1].args;
+    var def = $.Deferred();
+
     arr.push(extend({}, _obj[0], {
-      type: 'directive'
+      type: 'directive',
+      def: def
     }));
+
+    def.done(function() {
+      console.log('deferred done');
+    });
+
     return makeModule.apply(undefined, arr);
   };
 
@@ -394,6 +403,7 @@ var Yo = function() {
     init: init,
     add: add,
     directive: directive,
+    injector: injector,
     argsToArray: argsToArray,
     isTypeOf: isTypeOf,
     argumentChecker: argumentChecker,
