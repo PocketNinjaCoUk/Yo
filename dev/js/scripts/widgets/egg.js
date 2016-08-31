@@ -6,11 +6,7 @@
  * @param {string} test - The title of the book.
  * @returns {object} functions
  */
-Yo.add('Egg', ['test', 'tooltip', 'dropdown'], function(test, tooltip, dropdown) {
-  console.log('Widget: Egg active');
-  test.output(' from egg');
-  tooltip.output();
-  dropdown.output();
+Yo.add('Egg', function() {
 
   /**
    * Egg test output function

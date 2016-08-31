@@ -28,6 +28,7 @@
     "grunt": "^0.4.5",
     "gulp": "^3.9.0",
     "gulp-include": "^2.0.3",
-    "gulp-jsdoc": "^0.1.5"
+    "gulp-jsdoc": "^0.1.5",
+    "gulp-minify": "0.0.14"
   }
 }

@@ -7,3 +7,4 @@
 //= require scripts/utils/chicken.js
 //= require scripts/utils/hello.js
 //= require scripts/utils/cheese.js
+//= require scripts/utils/egg.js

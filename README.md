@@ -23,6 +23,8 @@ $ gulp
 
 This imports javascript into 1 file and copies it to a public folder along with the index html page.
 
+You can also just grab the full or minified versions from the dev folder and just get on coding one off.
+
 ### Why?
 
 Try running the code below!
@@ -44,7 +46,7 @@ Try running the code below!
   }(namespace.widget.utils);
 ```
 
-Works lovely doesn't it.  Now run the code below with the 2 functions swapped around
+Works lovely does'nt it.  Now run the code below with the 2 functions swapped around
 
 ```javascript
   var namespace = {};
@@ -63,7 +65,7 @@ Works lovely doesn't it.  Now run the code below with the 2 functions swapped ar
     }();
 ```
 
-Doesn't work very well at all.  *I can put them in order or have an init function at the bottom of the page though!* You say!
+Does'nt work very well at all.  *I can put them in order or have an init function at the bottom of the page though!* You say!
 Well forget you and forget that! :-P
 
 ## So lets look at Yo
@@ -78,7 +80,11 @@ Well forget you and forget that! :-P
     // defaults to Yo if not set.
     namespace: CompanyName.whatever,
     // defaults to 'module' if not set.  For example
-    scriptRoot: 'scriptiesHere'
+    scriptRoot: 'scriptiesHere',
+    // For outputting scripts Added, Loaded and dependency Connections
+    debugMode: true,
+    // For outputing only logs by the scripts / keywords listed, case sensitive
+    debugScripts: ['scriptX', 'scriptY']
   });
 ```
 
