@@ -65,6 +65,10 @@ var Yo = function() {
     ns[scriptRoot] = ns[scriptRoot] || {};
     ns.debugMode = data.debugMode || false;
     ns.debugScripts = data.debugScripts || undefined;
+
+    if(ns.debugMode) {
+      Yo.loadOrder = [];
+    }
   };
 
   var log = function(str) {
@@ -246,12 +250,16 @@ var Yo = function() {
 
       if(getLoadedState(_script).loaded) {
         nsLocation[lastNameSpace] = getLoadedState(_script).loadedFunc();
-        getLoadedState(_script).runAfterActivation();
 
         // Debugging reasons
         totalScriptsLoaded += 1;
         log('YO.LOADED: ' + _script);
+        if(ns.debugMode) {
+          Yo.loadOrder.push(_script);
+        }
         log('scripts ADDED: ' + totalScriptsAdded + ', LOADED: ' + totalScriptsLoaded);
+
+        getLoadedState(_script).runAfterActivation();
       }
     };
 
@@ -293,16 +301,22 @@ var Yo = function() {
 
     var checkDependedBy = function() {
       var dependedBy = getLoadedState(scriptName).dependedBy;
+      var otherScript;
 
-      dependedBy.forEach(function(otherScript) {
-        for(var i = 0; i < dependedBy.length; i++) {
-          for(var a = 0; a < getLoadedState(otherScript).dependencies.length; a++) {
-            if (getLoadedState(otherScript).dependencies[a] === scriptName) {
-              getLoadedState(otherScript).dependencies.splice(a, 1);
-              dependedBy.splice(i, 1);
-              log('DEPENDENCY: ' + otherScript + ' dependeds on ' + scriptName);
-              break;
-            }
+      // Loop through dependedBy list
+      for(var i = 0; i < dependedBy.length; i++) {
+        otherScript = dependedBy[i];
+
+        // Each dependedBy has a dependency list, so this removes
+        // the current script from it's array and then removes the
+        // dependency from the current script dependedBy
+        for(var a = 0; a < getLoadedState(otherScript).dependencies.length; a++) {
+          if (getLoadedState(otherScript).dependencies[a] === scriptName) {
+            getLoadedState(otherScript).dependencies.splice(a, 1);
+            dependedBy.splice(i, 1);
+            i--;
+            log('DEPENDENCY: ' + otherScript + ' dependeds on ' + scriptName);
+            break;
           }
         }
 
@@ -310,7 +324,7 @@ var Yo = function() {
           getLoadedState(otherScript).loaded = true;
           activateScript(otherScript);
         }
-      });
+      }
     };
 
 

@@ -1,10 +1,16 @@
 
 // TEST EMPTY WIDGETS
-//= require scripts/widgets/someWidget.js
 
-//= require scripts/utils/all.js
 
-//= require scripts/utils/chicken.js
-//= require scripts/utils/hello.js
-//= require scripts/utils/cheese.js
-//= require scripts/utils/egg.js
+//= require scripts/utils/device.js
+//= require scripts/utils/gotopage.js
+
+//= require scripts/product/upsell.js
+//= require scripts/upsell.js
+//= require scripts/crosssell.js
+//= require scripts/widgets/popup.js
+
+//= require scripts/cart/addItem.js
+//= require scripts/cart/service.js
+
+//= require scripts/page/checkout/directive.js
