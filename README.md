@@ -178,7 +178,7 @@ Or with namespaces
 
 ### Debugging
 
-You have a few small tools to help you debug.  Simple activate debug mode in Yo.init and either leave debugScripts empty to render all logs, or, enter any script names or strings.
+You have a few small tools to help you debug.  Simply activate debug mode in Yo.init and either leave debugScripts empty to render all logs, or, enter any script names or strings.
 
 ```javascript
   Yo.init({
