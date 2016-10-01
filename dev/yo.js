@@ -300,7 +300,7 @@ var Yo = function() {
             if (getLoadedState(otherScript).dependencies[a] === scriptName) {
               getLoadedState(otherScript).dependencies.splice(a, 1);
               dependedBy.splice(i, 1);
-              log('DEPENDENCY: ' + scriptName + ' depended on by ' + otherScript);
+              log('DEPENDENCY: ' + otherScript + ' dependeds on ' + scriptName);
               break;
             }
           }
@@ -319,28 +319,25 @@ var Yo = function() {
       var scriptDependents = getLoadedState(scriptName).dependencies;
       var dependencyScriptName;
 
-      var looper = function() {
-        for(var i = 0; i < scriptDependents.length; i++) {
-          dependencyScriptName = scriptDependents[i];
-          // If script name loadState doesn't
-          // exist then create one
-          if(!nsGet(dependencyScriptName, Yo.loadedState)) {
-            createOrEditLoadedState({}, dependencyScriptName);
-          }
+      log('SCRIPTS: ' + scriptName + ' dependent on [' + scriptDependents.toString() + ']');
 
-          if(!getLoadedState(dependencyScriptName).loaded) {
-            getLoadedState(dependencyScriptName).dependedBy.push(scriptName);
-            allDependenciesLoaded = false;
-          }
-          else {
-            scriptDependents.splice(i, 1);
-            looper();
-            break;
-          }
+      for(var i = 0; i < scriptDependents.length; i++) {
+        dependencyScriptName = scriptDependents[i];
+        // If script name loadState doesn't
+        // exist then create one
+        if(!nsGet(dependencyScriptName, Yo.loadedState)) {
+          createOrEditLoadedState({}, dependencyScriptName);
         }
-      };
 
-      looper();
+        if(!getLoadedState(dependencyScriptName).loaded) {
+          getLoadedState(dependencyScriptName).dependedBy.push(scriptName);
+          allDependenciesLoaded = false;
+        }
+        else {
+          scriptDependents.splice(i, 1);
+          i--;
+        }
+      }
 
       if(allDependenciesLoaded) {
         getLoadedState(scriptName).loaded = true;
