@@ -10,5 +10,5 @@ Yo.init({
   namespace: CompanyName
   ,scriptRoot: 'myModules'
   //,debugMode: true
-  //,debugScripts: ['your', 'fine', 'scripts', 'here']
+  //,debugScripts: ['LOADED', 'anotherScriptName', 'any string']
 });

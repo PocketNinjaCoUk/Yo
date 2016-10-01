@@ -97,14 +97,14 @@ Well forget you and forget that! :-P
     namespace: CompanyName.whatever,
   });
   
-  // CompanyName.whatever.module
+  // returns CompanyName.whatever.module
   
   Yo.init({
     namespace: CompanyName.whatever,
     scriptRoot: 'scriptiesHere'
   });
   
-  // CompanyName.whatever.scriptiesHere
+  // returns CompanyName.whatever.scriptiesHere
 ```
 
 
@@ -174,4 +174,40 @@ Or with namespaces
       show: show
     }
   });
+```
+
+### Debugging
+
+You have a few small tools to help you debug.  Simple activate debug mode in Yo.init and either leave debugScripts empty to render all logs, or, enter any script names or strings.
+
+```javascript
+  Yo.init({
+      debugMode: true,
+      debugScripts: ['scriptX', 'scriptY', 'any string']
+    });
+```
+
+For strings just enter if you just want to render added script logs
+
+```javascript
+  {
+    debugScripts: ['YO.ADD:']
+  }
+```
+
+You can also view the render order of the scripts in the console which outputs an array
+
+```javascript
+  Yo.loadOrder
+```
+
+If you include the debugScripts option with loadOrder you can see the render order of just the scripts you're focusing on
+
+```javascript
+  Yo.init({
+    debugMode: true,
+    debugScripts: ['script1', 'script2', 'script3']
+  });
+  
+  Yo.loadOrder
 ```
