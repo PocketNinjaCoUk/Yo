@@ -5,5 +5,5 @@
 
 
 // INIT
-//= require ../yo.js
+//= require ../yo.min.js
 //= require scripts/start.js

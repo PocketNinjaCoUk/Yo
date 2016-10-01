@@ -71,21 +71,29 @@ var Yo = function() {
     }
   };
 
-  var log = function(str) {
+  var isDebugScriptsEmpty = function() {
+    return isTypeOf('Array', ns.debugScripts) && ns.debugScripts.length < 1;
+  };
+
+  var renderLogOrDebugScript = function(str, fn) {
     if(ns.debugMode) {
-      if(ns.debugScripts === undefined || isTypeOf('Array', ns.debugScripts) && ns.debugScripts.length < 1) {
-        // undefined or empty debugScripts array means ALL scripts
-        console.log(str);
+      if(ns.debugScripts === undefined || isDebugScriptsEmpty()) {
+        fn(str);
       }
-      else if(isTypeOf('Array', ns.debugScripts) && ns.debugScripts.length > 0) {
-        // Array means display all script logs within the array
+      else if(!isDebugScriptsEmpty()) {
         ns.debugScripts.forEach(function(scriptItem) {
           if(str.search(scriptItem) > -1) {
-            console.log(str);
+            fn(str);
           }
         });
       }
     }
+  };
+
+  var log = function(str) {
+    renderLogOrDebugScript(str, function() {
+      console.log(str);
+    });
   };
 
   var isTypeOf = function(str, obj) {
@@ -251,14 +259,17 @@ var Yo = function() {
       if(getLoadedState(_script).loaded) {
         nsLocation[lastNameSpace] = getLoadedState(_script).loadedFunc();
 
-        // Debugging reasons
+        // Debugging Section
         totalScriptsLoaded += 1;
         log('YO.LOADED: ' + _script);
-        if(ns.debugMode) {
+        renderLogOrDebugScript(_script, function() {
           Yo.loadOrder.push(_script);
-        }
+        });
         log('scripts ADDED: ' + totalScriptsAdded + ', LOADED: ' + totalScriptsLoaded);
 
+        // After script activation, run the final
+        // function activating any dependedBy scripts
+        // if this is the last script in its list.
         getLoadedState(_script).runAfterActivation();
       }
     };
@@ -315,7 +326,7 @@ var Yo = function() {
             getLoadedState(otherScript).dependencies.splice(a, 1);
             dependedBy.splice(i, 1);
             i--;
-            log('DEPENDENCY: ' + otherScript + ' dependeds on ' + scriptName);
+            log('DEPENDENCY: ' + otherScript + ' dependent on ' + scriptName);
             break;
           }
         }
