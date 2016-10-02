@@ -18,6 +18,11 @@ gulp.task('copy-html', function() {
     .pipe(gulp.dest('./public'));
 });
 
+gulp.task('styles', function() {
+  gulp.src('./dev/css/**.css')
+    .pipe(gulp.dest('./public/css'));
+});
+
 gulp.task('compress', function() {
   gulp.src('./dev/js/scripts/yo.js')
     .pipe(minify({
@@ -31,4 +36,4 @@ gulp.task('compress', function() {
     .pipe(gulp.dest('./dev/'))
 });
 
-gulp.task('default', ['scripts', 'copy-html']);
+gulp.task('default', ['scripts', 'copy-html', 'styles']);
