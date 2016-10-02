@@ -7,5 +7,6 @@
 
 
 // INIT
-//= require ../yo.min.js
+//= require scripts/yo-vis-debug.js
+//= require ../yo.js
 //= require scripts/start.js

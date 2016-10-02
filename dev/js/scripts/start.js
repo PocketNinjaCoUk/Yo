@@ -9,6 +9,7 @@ var CompanyName = {};
 Yo.init({
   namespace: CompanyName
   ,scriptRoot: 'myModules'
-  //,debugMode: true
-  //,debugScripts: ['LOADED', 'anotherScriptName', 'any string']
+  ,debugMode: true
+  ,debugScripts: ['LOADED', 'anotherScriptName', 'any string']
+  ,debugVis: YoDebugVis()
 });

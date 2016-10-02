@@ -65,10 +65,15 @@ var Yo = function() {
     ns[scriptRoot] = ns[scriptRoot] || {};
     ns.debugMode = data.debugMode || false;
     ns.debugScripts = data.debugScripts || undefined;
+    ns.debugVis = data.debugVis || undefined;
 
     if(ns.debugMode) {
       Yo.loadOrder = [];
     }
+  };
+
+  var isDebugVis = function() {
+    return isTypeOf('Object', ns.debugVis);
   };
 
   var isDebugScriptsEmpty = function() {
@@ -265,6 +270,7 @@ var Yo = function() {
         renderLogOrDebugScript(_script, function() {
           Yo.loadOrder.push(_script);
         });
+
         log('scripts ADDED: ' + totalScriptsAdded + ', LOADED: ' + totalScriptsLoaded);
 
         // After script activation, run the final
@@ -388,6 +394,11 @@ var Yo = function() {
     log('YO.ADD: ' + scriptName);
     totalScriptsAdded += 1;
 
+    // Creating node for Vis debugging
+    if(isDebugVis()) {
+      ns.debugVis.addNode(scriptName);
+    }
+
     if (hasNoDependencies) {
       createOrEditLoadedState({
         loaded: true,
@@ -406,6 +417,15 @@ var Yo = function() {
       });
       checkDependencies();
       activateScript(scriptName);
+
+      // Creating edge for node dependencies
+      // in Vis debugging
+      if(isDebugVis()) {
+        scriptDependencies.forEach(function(otherScript) {
+          // For, To
+          ns.debugVis.addEdge(scriptName, otherScript);
+        });
+      }
     }
   };
 
