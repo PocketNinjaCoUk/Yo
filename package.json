@@ -30,6 +30,7 @@
     "gulp-include": "^2.0.3",
     "gulp-jsdoc": "^0.1.5",
     "gulp-minify": "0.0.14",
+    "jasmine": "^2.5.2",
     "karma": "^1.3.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-firefox-launcher": "^1.0.0",

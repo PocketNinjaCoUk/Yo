@@ -2,7 +2,7 @@
 
 describe('makeBasicScript', function() {
 
-  Yo.init();
+  Yo.init({});
   Yo.add('hello', function() {
     return "Hello!";
   });
