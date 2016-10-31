@@ -8,6 +8,6 @@ describe('makeBasicScript', function() {
   });
 
   it('Should return "Hello!"', function() {
-    expect(Yo.modules.hello).toBe('eggsa!');
+    expect(Yo.modules.hello).toBe('Hello!');
   });
 });

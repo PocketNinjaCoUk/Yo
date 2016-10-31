@@ -1,3 +1,6 @@
+
+<img src="https://travis-ci.org/PocketNinjaCoUk/Yo.svg?branch=master">
+
 # Yo
 
 ## Dependency on a single page script
