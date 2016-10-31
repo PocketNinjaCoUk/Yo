@@ -1,6 +1,5 @@
 
 [![Build Status](https://travis-ci.org/PocketNinjaCoUk/Yo.svg?branch=master)](https://travis-ci.org/PocketNinjaCoUk/Yo)
-[![Coverage Status](https://coveralls.io/repos/github/PocketNinjaCoUk/Yo/badge.svg?branch=master)](https://coveralls.io/github/PocketNinjaCoUk/Yo?branch=master)
 
 # Yo
 
