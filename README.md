@@ -1,5 +1,5 @@
 
-<img src="https://travis-ci.org/PocketNinjaCoUk/Yo.svg?branch=master">
+[![Build Status](https://travis-ci.org/PocketNinjaCoUk/Yo.svg?branch=master)](https://travis-ci.org/PocketNinjaCoUk/Yo)
 
 # Yo
 
