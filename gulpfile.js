@@ -1,5 +1,6 @@
 
 var gulp = require('gulp');
+var removeEmptyLines = require('gulp-remove-empty-lines');
 var include = require('gulp-include');
 var minify = require('gulp-minify');
 
@@ -10,6 +11,7 @@ gulp.task('scripts', function() {
     ])
     .pipe(include())
       .on('error', console.log)
+    .pipe(removeEmptyLines())
     .pipe(gulp.dest('./public/js'));
 });
 

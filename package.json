@@ -27,6 +27,7 @@
     "gulp": "^3.9.0",
     "gulp-include": "^2.0.3",
     "gulp-minify": "0.0.14",
+    "gulp-remove-empty-lines": "0.0.8",
     "jasmine": "^2.6.0",
     "jasmine-core": "^2.6.2",
     "karma": "^1.7.0",
