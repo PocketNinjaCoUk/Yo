@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/PocketNinjaCoUk/Yo.svg?branch=master)](https://travis-ci.org/PocketNinjaCoUk/Yo)
+[![Build Status](https://travis-ci.org/PocketNinjaDesign/Yo.svg?branch=master)](https://travis-ci.org/PocketNinjaDesign/Yo)
 
 # Yo
 
@@ -99,14 +99,14 @@ Well forget you and forget that! :-P
   Yo.init({
     namespace: CompanyName.whatever,
   });
-  
+
   // returns CompanyName.whatever.module
-  
+
   Yo.init({
     namespace: CompanyName.whatever,
     scriptRoot: 'scriptiesHere'
   });
-  
+
   // returns CompanyName.whatever.scriptiesHere
 ```
 
@@ -159,7 +159,7 @@ Or with namespaces
     something.show();
     different.show();
   });
-  
+
   Yo.add('Something', function() {
     var show = function() {
       console.log('say HI from something');
@@ -168,7 +168,7 @@ Or with namespaces
       show: show
     }
   });
-  
+
   Yo.add('Different', function() {
     var show = function() {
       console.log('say HI from different');
@@ -211,6 +211,6 @@ If you include the debugScripts option with loadOrder you can see the render ord
     debugMode: true,
     debugScripts: ['script1', 'script2', 'script3']
   });
-  
+
   Yo.loadOrder
 ```
