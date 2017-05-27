@@ -16,7 +16,7 @@
     "page",
     "dependencies"
   ],
-  "author": "eyeamaman",
+  "author": "Pockjetninja.Design",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/eyeamaman/js-dependency-single-page/issues"
@@ -26,7 +26,6 @@
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-include": "^2.0.3",
-    "gulp-jsdoc": "^0.1.5",
     "gulp-minify": "0.0.14",
     "jasmine": "^2.6.0",
     "jasmine-core": "^2.6.2",
