@@ -28,7 +28,7 @@
     "gulp-include": "^2.0.3",
     "gulp-jsdoc": "^0.1.5",
     "gulp-minify": "0.0.14",
-    "jasmine": "^2.5.2",
+    "jasmine": "^2.6.0",
     "jasmine-core": "^2.6.2",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.1.1",
