@@ -9,6 +9,13 @@ Using gulp to import javascript files into 1 file and provide clean dependencies
 Basically this is just a pet project to do this and learn at the same time :-)
 Currently it seems to work well with raw Javascript.  For importing 3rd party plugins that run on page ready there is a little more work :-S
 
+1. [To Install](#to-install)
+2. [Why](#why)
+3. [So lets look at Yo](#so-lets-look-at-yo)
+..* [How To Use](#how-to-use)
+..* [Debugging](#debugging)
+
+
 ### To install
 
 Download the repo and run
