@@ -12,8 +12,8 @@ Currently it seems to work well with raw Javascript.  For importing 3rd party pl
 1. [To Install](#to-install)
 2. [Why](#why)
 3. [So lets look at Yo](#so-lets-look-at-yo)
-  * [How To Use](#how-to-use)
-  * [Debugging](#debugging)
+   * [How To Use](#how-to-use)
+   * [Debugging](#debugging)
 
 
 ### To install
