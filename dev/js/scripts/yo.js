@@ -403,6 +403,10 @@ var Yo = function() {
       scriptName = arguments[0].toLowerCase();
       scriptCallback = arguments[1];
       // This uses global dependencies now
+      if (ns.globalDependencies) {
+        scriptDependencies = ns.globalDependencies;
+        hasNoDependencies = scriptDependencies.length < 1;
+      }
     }
     else if(argumentChecker(arguments, ['String'])) {
       // For window global vars to activate other scripts
