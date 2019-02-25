@@ -403,7 +403,7 @@ var Yo = function() {
       scriptName = arguments[0].toLowerCase();
       scriptCallback = arguments[1];
       // This uses global dependencies now
-      if (ns.globalDependencies) {
+      if (ns.globalDependencies && !ns.globalDependencies.includes(scriptName)) {
         scriptDependencies = ns.globalDependencies;
         hasNoDependencies = scriptDependencies.length < 1;
       }
