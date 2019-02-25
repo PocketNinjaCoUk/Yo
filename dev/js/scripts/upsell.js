@@ -1,3 +1,5 @@
+
+
 Yo.add('upsell', ['widgets.popup'], function(widgetsPopup) {
   var scriptName = 'upsell';
   var init = function(str) {

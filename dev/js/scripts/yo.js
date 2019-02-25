@@ -69,6 +69,12 @@ var Yo = function() {
     if(ns.debugMode) {
       Yo.loadOrder = [];
     }
+
+    // global dependencies will be added to all
+    // scripts by default unless specified
+    ns.globalDependencies = data.globalDependencies || undefined;
+
+    ns.dependencyAsObject = data.dependencyAsObject || false;
   };
 
   var isDebugScriptsEmpty = function() {
@@ -304,6 +310,16 @@ var Yo = function() {
         }
       });
 
+      if (ns.dependencyAsObject) {
+        var obj = {};
+
+        scriptDependencies.map(function(_scriptName) {
+          obj[_scriptName] = getScript(_scriptName);
+        });
+  
+        return scriptCallback.apply(null, [obj]);
+      }
+
       return scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
         return getScript(_scriptName);
       }));
@@ -369,17 +385,30 @@ var Yo = function() {
       }
     };
 
+    var hasFunction = true;
 
+    // if(argumentChecker(arguments, ['String', 'Array', 'Function']) || ns.globalDependencies) {
     if(argumentChecker(arguments, ['String', 'Array', 'Function'])) {
       scriptName = arguments[0].toLowerCase();
-      scriptDependencies = arguments[1];
+      scriptDependencies = isTypeOf('Array', arguments[1])? arguments[1] : [];
+
+      if (ns.globalDependencies) {
+        scriptDependencies = scriptDependencies.concat(ns.globalDependencies);
+      }
+      // scriptDependencies = arguments[1];
       scriptCallback = arguments[2];
       hasNoDependencies = scriptDependencies.length < 1;
     }
     else if(argumentChecker(arguments, ['String', 'Function'])) {
       scriptName = arguments[0].toLowerCase();
       scriptCallback = arguments[1];
+      // This uses global dependencies now
     }
+    else if(argumentChecker(arguments, ['String'])) {
+      // For window global vars to activate other scripts
+      scriptName = arguments[0].toLowerCase();
+      hasFunction = false;
+    } 
     else {
       log('incorrect params added', arguments);
       return false;
@@ -393,7 +422,11 @@ var Yo = function() {
         loaded: true,
         loadedFunc: scriptCallback
       });
-      activateScript(scriptName);
+
+      if (hasFunction) {
+        activateScript(scriptName);
+      }
+      
       checkDependedBy();
     }
     else {
