@@ -153,7 +153,7 @@ var Yo = function() {
   };
 
   /**
-   * Gets either and object or false
+   * Gets either an object or false
    *
    * @method nsGet
    * @param {string} _nsStr Script namespace or name
@@ -387,30 +387,45 @@ var Yo = function() {
 
     var hasFunction = true;
 
-    // if(argumentChecker(arguments, ['String', 'Array', 'Function']) || ns.globalDependencies) {
-    if(argumentChecker(arguments, ['String', 'Array', 'Function'])) {
-      scriptName = arguments[0].toLowerCase();
-      scriptDependencies = isTypeOf('Array', arguments[1])? arguments[1] : [];
+    var objectHasValue = function (obj, value) {
+      var keys = Object.keys(obj);
+
+      for (var i = 0; i < keys.length; i += 1) {
+        if (obj[keys[i]] === value) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
+
+    var objectIsEmpty = function (obj) {
+      return Object.keys(obj).length < 1;
+    }
+
+    if(argumentChecker(arguments, ['String', 'Object', 'Function'])) {
+      scriptName = arguments[0];
+      scriptDependencies = arguments[1];
 
       if (ns.globalDependencies) {
-        scriptDependencies = scriptDependencies.concat(ns.globalDependencies);
+        scriptDependencies = extend({}, scriptDependencies, ns.globalDependencies);
       }
       // scriptDependencies = arguments[1];
       scriptCallback = arguments[2];
-      hasNoDependencies = scriptDependencies.length < 1;
+      hasNoDependencies = objectIsEmpty(scriptDependencies);
     }
     else if(argumentChecker(arguments, ['String', 'Function'])) {
-      scriptName = arguments[0].toLowerCase();
+      scriptName = arguments[0];
       scriptCallback = arguments[1];
       // This uses global dependencies now
-      if (ns.globalDependencies && !ns.globalDependencies.includes(scriptName)) {
-        scriptDependencies = ns.globalDependencies;
-        hasNoDependencies = scriptDependencies.length < 1;
+      if (ns.globalDependencies && !objectHasValue(ns.globalDependencies, scriptName)) {
+        scriptDependencies = extend({}, ns.globalDependencies);
+        hasNoDependencies = objectIsEmpty(scriptDependencies);
       }
     }
     else if(argumentChecker(arguments, ['String'])) {
       // For window global vars to activate other scripts
-      scriptName = arguments[0].toLowerCase();
+      scriptName = arguments[0];
       hasFunction = false;
     } 
     else {

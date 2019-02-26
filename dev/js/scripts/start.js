@@ -9,7 +9,10 @@ var CompanyName = {};
 Yo.init({
   namespace: CompanyName
   ,scriptRoot: 'myModules'
-  ,globalDependencies: ['jquery', 'pants']
+  ,globalDependencies: {
+    jQuery: 'jQuery',
+    pants: 'pants'
+  }
   ,dependencyAsObject: true
   //,debugMode: true
   //,debugScripts: ['LOADED', 'anotherScriptName', 'any string']

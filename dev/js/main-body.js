@@ -15,12 +15,12 @@
 
 //#= require scripts/page/checkout/directive.js
 
-var arseDependencies = [
-  { pony: 'pony' },
-  { egg: 'egg' }
-];
+var arseDependencies = {
+  pony: 'pony',
+  egg: 'egg'
+};
 
-Yo.add('arse', ['pony', 'egg'], function (dep) {
+Yo.add('arse', arseDependencies, function (dep) {
   console.log(dep);
   // console.log(dep.pony);
   // console.log(dep.egg);
