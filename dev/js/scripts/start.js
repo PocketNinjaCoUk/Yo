@@ -13,7 +13,6 @@ Yo.init({
     jQuery: 'jQuery',
     pants: 'pants'
   }
-  ,dependencyAsObject: true
   //,debugMode: true
   //,debugScripts: ['LOADED', 'anotherScriptName', 'any string']
 });

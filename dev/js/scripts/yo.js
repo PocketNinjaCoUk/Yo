@@ -73,8 +73,6 @@ var Yo = function() {
     // global dependencies will be added to all
     // scripts by default unless specified
     ns.globalDependencies = data.globalDependencies || undefined;
-
-    ns.dependencyAsObject = data.dependencyAsObject || false;
   };
 
   var isDebugScriptsEmpty = function() {
@@ -165,7 +163,14 @@ var Yo = function() {
    *
    */
   var nsGet = function(_nsStr, _nsObject, _getObjectRoot) {
-    var keyArr = _nsStr.split('.');
+    var keyArr;
+
+    if (isTypeOf('Array', _nsStr)) {
+      keyArr = _nsStr[1].split('.');
+    } else {
+      keyArr = _nsStr.split('.');
+    }
+
     var currentObj = _nsObject;
     _getObjectRoot = _getObjectRoot || false;
 
@@ -198,7 +203,14 @@ var Yo = function() {
    *
    */
   var nsSet = function(_nsStr, _nsObject, _getObjectRoot) {
-    var keyArr = _nsStr.split('.');
+    var keyArr;
+
+    if (isTypeOf('Array', _nsStr)) {
+      keyArr = _nsStr[1].split('.');
+    } else {
+      keyArr = _nsStr.split('.');
+    }
+
     var currentObj = _nsObject;
     _getObjectRoot = _getObjectRoot || false;
 
@@ -310,19 +322,17 @@ var Yo = function() {
         }
       });
 
-      if (ns.dependencyAsObject) {
-        var obj = {};
+      var obj = {};
 
-        scriptDependencies.map(function(_scriptName) {
-          obj[_scriptName] = getScript(_scriptName);
-        });
-  
-        return scriptCallback.apply(null, [obj]);
-      }
+      objectToArray(scriptDependencies).map(function(_scriptName) {
+        obj[_scriptName[0]] = getScript(_scriptName[1]);
+      });
 
-      return scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
-        return getScript(_scriptName);
-      }));
+      return scriptCallback.apply(null, [obj]);
+
+      // return scriptCallback.apply(null, scriptDependencies.map(function(_scriptName) {
+      //   return getScript(_scriptName);
+      // }));
     };
 
 
@@ -338,7 +348,7 @@ var Yo = function() {
         // the current script from it's array and then removes the
         // dependency from the current script dependedBy
         for(var a = 0; a < getLoadedState(otherScript).dependencies.length; a++) {
-          if (getLoadedState(otherScript).dependencies[a] === scriptName) {
+          if (getLoadedState(otherScript).dependencies[a][1] === scriptName) {
             getLoadedState(otherScript).dependencies.splice(a, 1);
             dependedBy.splice(i, 1);
             i--;
@@ -358,12 +368,15 @@ var Yo = function() {
     var checkDependencies = function() {
       var allDependenciesLoaded = true;
       var scriptDependents = getLoadedState(scriptName).dependencies;
+      var dependencyScript;
       var dependencyScriptName;
 
       log('SCRIPTS: ' + scriptName + ' dependent on [' + scriptDependents.toString() + ']');
 
       for(var i = 0; i < scriptDependents.length; i++) {
-        dependencyScriptName = scriptDependents[i];
+        dependencyScript = scriptDependents[i];
+        dependencyScriptName = dependencyScript[1];
+        
         // If script name loadState doesn't
         // exist then create one
         if(!nsGet(dependencyScriptName, Yo.loadedState)) {
@@ -401,6 +414,17 @@ var Yo = function() {
 
     var objectIsEmpty = function (obj) {
       return Object.keys(obj).length < 1;
+    }
+
+    var objectToArray = function (obj) {
+      var keys = Object.keys(obj);
+      var returnList = [];
+
+      for (var i = 0; i < keys.length; i += 1) {
+        returnList.push([keys[i], obj[keys[i]]]);
+      }
+
+      return returnList;
     }
 
     if(argumentChecker(arguments, ['String', 'Object', 'Function'])) {
@@ -451,7 +475,7 @@ var Yo = function() {
     else {
       createOrEditLoadedState({
         loadedFunc: pushFunction,
-        dependencies: arrayClone(scriptDependencies),
+        dependencies: objectToArray(scriptDependencies),
         runAfterActivation: function() {
           checkDependedBy();
         }

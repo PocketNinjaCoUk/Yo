@@ -17,29 +17,56 @@
 
 var arseDependencies = {
   pony: 'pony',
-  egg: 'egg'
+  shitHeadEggFarmer: 'component.egg'
 };
 
 Yo.add('arse', arseDependencies, function (dep) {
-  console.log(dep);
+  console.log('arse dependencies: ', dep);
   // console.log(dep.pony);
   // console.log(dep.egg);
 });
 
+Yo.add('duncan', false, function () {
+  
+})
 
-Yo.add('pony', function () {
-  return 'Hello World';
+
+Yo.add('pony', { fartEggMan: 'component.egg' }, function (dep) {
+
+  console.log('pony dependencies: ', dep);
+
+  function helloWorld () {
+    console.log('Hello World');
+  }
+
+  return {
+    helloWorld: helloWorld
+  };
 });
 
-Yo.add('egg', function () {
+Yo.add('component.egg', function () {
+
+  function sayEgg () {
+    console.log('pants');
+  }
+
   return {
-    egg: 'egg'
+    sayEgg: sayEgg
   }
 });
 
+
+
+// Global Functions
+
 Yo.add('pants', function () {
+
+  function sayPants () {
+    console.log('pants');
+  }
+
   return {
-    pants: 'pants'
+    something: sayPants
   }
 });
 
