@@ -22,8 +22,8 @@ var arseDependencies = {
 
 Yo.add('arse', arseDependencies, function (dep) {
   console.log('arse dependencies: ', dep);
-  // console.log(dep.pony);
-  // console.log(dep.egg);
+  console.log(dep.pony);
+  console.log(dep.shitHeadEggFarmer);
 });
 
 Yo.add('duncan', false, function () {

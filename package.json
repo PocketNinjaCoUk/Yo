@@ -22,7 +22,8 @@
     "url": "https://github.com/eyeamaman/js-dependency-single-page/issues"
   },
   "homepage": "https://github.com/eyeamaman/js-dependency-single-page",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-include": "^2.0.3",
