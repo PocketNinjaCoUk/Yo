@@ -221,3 +221,8 @@ If you include the debugScripts option with loadOrder you can see the render ord
 
   Yo.loadOrder
 ```
+
+
+### Testing
+
+Run `./node_modules/karma/bin/karma start`
