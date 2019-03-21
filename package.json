@@ -22,8 +22,7 @@
     "url": "https://github.com/eyeamaman/js-dependency-single-page/issues"
   },
   "homepage": "https://github.com/eyeamaman/js-dependency-single-page",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-include": "^2.0.3",
@@ -31,8 +30,8 @@
     "gulp-remove-empty-lines": "0.0.8",
     "jasmine": "^2.6.0",
     "jasmine-core": "^2.6.2",
-    "karma": "^1.7.0",
-    "karma-chrome-launcher": "^2.1.1",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^1.1.0"
   }

@@ -1,9 +1,4 @@
 
-// TEST EMPTY WIDGETS
-
-
-//#= require scripts/utils/device.js
-
 var arseDependencies = {
   pony: 'pony',
   shitHeadEggFarmer: 'component.egg'
