@@ -1,16 +1,16 @@
 
+describe('A Basic Script that', function() {
 
-describe('A Basic Script', function() {
-  beforeEach(function() {
+  beforeEach(function () {
+    this.yo = new Yo();
     this.company = {};
-    Yo.init({
+    this.yo.init({
       namespace: this.company
     });
   });
 
-
   it('Should return "World"', function() {
-    Yo.add('hello', function() {
+    this.yo.add('hello', function() {
       return "World";
     });
 
@@ -19,41 +19,24 @@ describe('A Basic Script', function() {
 });
 
 
-describe('Uses a global Dependency', function() {
-  beforeEach(function() {
-    this.company = {};
 
-    Yo.init({
+
+describe('A Basic Script changing scriptRoot to comps', function() {
+  beforeEach(function() {
+    this.yo = new Yo();
+    this.company = {};
+    this.yo.init({
       namespace: this.company,
-      globalDependencies: {
-        globalScript: 'globalScript'
-      }
+      scriptRoot: 'comps'
     });
   });
 
 
-
-  it('Should return "World"', function () {
-    Yo.add('hello', function () {
+  it('Should return "World"', function() {
+    this.yo.add('hello', function() {
       return "World";
     });
-  
-    Yo.add('globalScript');
 
-    expect(this.company.modules.hello).toBe('World');
-  });
-
-
-  
-  it('Should return "Hello World" from global Script', function () {
-    Yo.add('hello', function (dep) {
-      return dep.globalScript;
-    });
-  
-    Yo.add('globalScript', function () {
-      return 'Hello World';
-    });
-
-    expect(this.company.modules.hello).toBe('Hello World');
+    expect(this.company.comps.hello).toBe('World');
   });
 });

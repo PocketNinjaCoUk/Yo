@@ -7,7 +7,7 @@
  * @module Yo
  * @returns {object} public functions
  */
-var Yo = function() {
+function Yo() {
   "use strict";
 
   // Yo.loadedState.tooltip.{
@@ -376,7 +376,7 @@ var Yo = function() {
       for(var i = 0; i < scriptDependents.length; i++) {
         dependencyScript = scriptDependents[i];
         dependencyScriptName = dependencyScript[1];
-        
+
         // If script name loadState doesn't
         // exist then create one
         if(!nsGet(dependencyScriptName, Yo.loadedState)) {
@@ -408,7 +408,7 @@ var Yo = function() {
           return true;
         }
       }
-      
+
       return false;
     }
 
@@ -451,7 +451,7 @@ var Yo = function() {
       // For window global vars to activate other scripts
       scriptName = arguments[0];
       hasFunction = false;
-    } 
+    }
     else {
       log('incorrect params added', arguments);
       return false;
@@ -469,7 +469,7 @@ var Yo = function() {
       if (hasFunction) {
         activateScript(scriptName);
       }
-      
+
       checkDependedBy();
     }
     else {
@@ -493,4 +493,4 @@ var Yo = function() {
     arrayClone: arrayClone,
     extend: extend
   }
-}();
+};

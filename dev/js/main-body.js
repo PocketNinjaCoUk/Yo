@@ -10,10 +10,9 @@ Yo.add('arse', arseDependencies, function (dep) {
   console.log(dep.shitHeadEggFarmer);
 });
 
-Yo.add('duncan', false, function () {
-  
-})
-
+// Yo.add('duncan', false, function () {
+//   console.log('Duncan did not need no stinkin Global Dependency');
+// });
 
 Yo.add('pony', { fartEggMan: 'component.egg' }, function (dep) {
 
@@ -53,5 +52,6 @@ Yo.add('pants', function () {
     something: sayPants
   }
 });
+
 
 Yo.add('jQuery');
