@@ -181,12 +181,12 @@ Or with namespaces
 ### Dependency examples
 
 ```javascript
-  Yo.add('Lister', { something: 'widget.Something', different: 'widget.Different' }, function(dep) {
+  Yo.add('Lister', { something: 'widget.something', different: 'widget.different' }, function(dep) {
     dep.something.show();
     dep.different.show();
   });
 
-  Yo.add('Something', { different: 'widget.Different' }, function (dep) {
+  Yo.add('widget.something', { different: 'widget.different' }, function (dep) {
     var show = function () {
       console.log('say HI from something');
     };
@@ -198,7 +198,7 @@ Or with namespaces
     }
   });
 
-  Yo.add('Different', function () {
+  Yo.add('widget.different', function () {
     var show = function () {
       console.log('say HI from different');
     };
