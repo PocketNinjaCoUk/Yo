@@ -4,7 +4,7 @@
   "description": "Script for working with dependencies within the same file",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "./node_modules/.bin/karma start --single-run --browsers Chrome"
+    "test": "karma start --single-run --browsers Chrome"
   },
   "repository": {
     "type": "git",
