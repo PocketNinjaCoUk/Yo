@@ -7,7 +7,7 @@
  * @module Yo
  * @returns {object} public functions
  */
-var Yo = function() {
+function Yo() {
   "use strict";
 
   // Yo.loadedState.tooltip.{
@@ -442,7 +442,7 @@ var Yo = function() {
       scriptName = arguments[0];
       scriptCallback = arguments[1];
       // This uses global dependencies now
-      if (ns.globalDependencies && !objectHasValue(ns.globalDependencies, scriptName)) {
+      if (ns.globalDependencies !== undefined && !objectHasValue(ns.globalDependencies, scriptName)) {
         scriptDependencies = extend({}, ns.globalDependencies);
         hasNoDependencies = objectIsEmpty(scriptDependencies);
       }
@@ -493,4 +493,4 @@ var Yo = function() {
     arrayClone: arrayClone,
     extend: extend
   }
-}();
+};
