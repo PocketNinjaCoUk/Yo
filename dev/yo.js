@@ -3,12 +3,15 @@
 
 /**
  * Yo, the single page dependency management script created by pocketninja for his own amusement
+ * version 2.0.0
  *
  * @module Yo
  * @returns {object} public functions
  */
-var Yo = function() {
+function Yo() {
   "use strict";
+
+  var version = '2.0.0';
 
   // Yo.loadedState.tooltip.{
   //    loaded: boolean
@@ -410,11 +413,11 @@ var Yo = function() {
       }
 
       return false;
-    }
+    };
 
     var objectIsEmpty = function (obj) {
       return Object.keys(obj).length < 1;
-    }
+    };
 
     var objectToArray = function (obj) {
       var keys = Object.keys(obj);
@@ -425,7 +428,7 @@ var Yo = function() {
       }
 
       return returnList;
-    }
+    };
 
     if(argumentChecker(arguments, ['String', 'Object', 'Function'])) {
       scriptName = arguments[0];
@@ -486,11 +489,12 @@ var Yo = function() {
   };
 
   return {
-    init: init,
     add: add,
-    isTypeOf: isTypeOf,
     argumentChecker: argumentChecker,
     arrayClone: arrayClone,
-    extend: extend
+    extend: extend,
+    init: init,
+    isTypeOf: isTypeOf,
+    version: version
   }
-}();
+}

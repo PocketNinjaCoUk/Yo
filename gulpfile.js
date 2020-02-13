@@ -35,6 +35,6 @@ gulp.task('compress', function() {
 
 gulp.task('watch', function() {
   gulp.watch('./dev/js/**/**.js', ['default']); 
-})
+});
 
 gulp.task('default', ['scripts', 'copy-html']);

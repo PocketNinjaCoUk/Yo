@@ -3,6 +3,7 @@
 
 /**
  * Yo, the single page dependency management script created by pocketninja for his own amusement
+ * version 2.0.0
  *
  * @module Yo
  * @returns {object} public functions
@@ -10,12 +11,16 @@
 function Yo() {
   "use strict";
 
+  var version = '2.0.0';
+
   // Yo.loadedState.tooltip.{
   //    loaded: boolean
   //    loadedFunc: function
   //    dependedBy: [string],
   //    dependencies: [string]
   // }
+
+
 
   /**
    * container of the namespace object provided by the user with Yo.init()
@@ -25,12 +30,16 @@ function Yo() {
   var ns;
   var scriptRoot = 'modules';
 
+
+
   /**
    * Counter for items added for debugging output
    * @private
    * @var {number} totalScriptsAdded
    */
   var totalScriptsAdded = 0;
+
+
 
   /**
    * Counter for items loaded for debugging output
@@ -103,6 +112,8 @@ function Yo() {
   var isTypeOf = function(str, obj) {
     return '[object ' + str + ']' === Object.prototype.toString.call(obj);
   };
+
+
 
   /**
    * Arguments checker
@@ -410,11 +421,11 @@ function Yo() {
       }
 
       return false;
-    }
+    };
 
     var objectIsEmpty = function (obj) {
       return Object.keys(obj).length < 1;
-    }
+    };
 
     var objectToArray = function (obj) {
       var keys = Object.keys(obj);
@@ -425,7 +436,7 @@ function Yo() {
       }
 
       return returnList;
-    }
+    };
 
     if(argumentChecker(arguments, ['String', 'Object', 'Function'])) {
       scriptName = arguments[0];
@@ -485,12 +496,15 @@ function Yo() {
     }
   };
 
+
+
   return {
-    init: init,
     add: add,
-    isTypeOf: isTypeOf,
     argumentChecker: argumentChecker,
     arrayClone: arrayClone,
-    extend: extend
+    extend: extend,
+    init: init,
+    isTypeOf: isTypeOf,
+    version: version
   }
-};
+}

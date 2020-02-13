@@ -14,7 +14,7 @@ Yo.init({
   namespace: CompanyName
   ,scriptRoot: 'myModules'
   ,globalDependencies: {
-    jQuery: 'jQuery',
+    $: '$',
     pants: 'pants'
   }
   //,debugMode: true

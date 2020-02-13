@@ -20,7 +20,6 @@ describe('A Basic Script that', function() {
 
 
 
-
 describe('A Basic Script changing scriptRoot to comps', function() {
   beforeEach(function() {
     this.yo = new Yo();
